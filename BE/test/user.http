@@ -1,0 +1,25 @@
+POST http://127.0.0.1:5000/users/register
+Content-Type: application/json
+
+{
+  "name": "Nguyen Van A",
+  "phone": "0987654323",
+  "password": "123456",
+  "role": "admin",
+  "status": "Active"
+ 
+}
+
+###GET http://
+GET http://127.0.0.1:5000/users/login
+###
+POST http://127.0.0.1:5000/users/login
+Content-Type: application/json
+
+{
+  "phone": "0987654323",
+  "password": "123456"
+}
+
+###GET http://
+

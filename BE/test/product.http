@@ -1,0 +1,19 @@
+POST http://127.0.0.1:5000/products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3Njg1NDMxMjZ9.oc5yaIFXON7uxXCfmkALlAad0rAQn-YZ0ycYD_qNs3o
+
+{
+  "name": "Sữa Tươi Tiệt Trùng TH True Milk",
+  "image": "https://example.com/images/sua-th.jpg",
+  "description": "Sữa tươi sạch nguyên chất 100%, dung tích 1L.",
+  "price": 35000,
+  "manufacture_date": "2023-10-01",
+  "expiry_date": "2024-04-01",
+  "origin": "Việt Nam",
+  "unit": "Hộp",
+  "category_id": 1
+}
+### get http://
+GET http://127.0.0.1:5000/products
+### http://127.0.0.1:5000/products
+
