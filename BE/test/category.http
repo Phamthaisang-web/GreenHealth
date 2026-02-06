@@ -1,6 +1,16 @@
 POST http://127.0.0.1:5000/categories
 Content-Type: application/json
+#add token
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3Njk3NTA4Mzd9.dZiAdhF9TIQITCnN31CA6pqZ5CrvSqNFZkMGXLxrbOU
 
 {
-  "name": "Trái cây tươi"
+  "name": "Trái cây tươi và thơm ngon"
 }
+
+### lấy tất cả
+GET http://127.0.0.1:5000/categories
+
+### lấy từng cái theo_id
+GET http://127.0.0.1:5000/categories/3
+
+

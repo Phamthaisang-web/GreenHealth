@@ -1,19 +1,22 @@
 POST http://127.0.0.1:5000/products
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3Njg1NDMxMjZ9.oc5yaIFXON7uxXCfmkALlAad0rAQn-YZ0ycYD_qNs3o
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3Njk3NTA4Mzd9.dZiAdhF9TIQITCnN31CA6pqZ5CrvSqNFZkMGXLxrbOU
 
 {
-  "name": "Sữa Tươi Tiệt Trùng TH True Milk",
+  "name": "Sữa bò đen TH True Milk",
   "image": "https://example.com/images/sua-th.jpg",
-  "description": "Sữa tươi sạch nguyên chất 100%, dung tích 1L.",
-  "price": 35000,
+  "description": "Sữa bò nhập từ úc sạch nguyên chất 100%, dung tích 10l.",
+  "price": 60000,
   "manufacture_date": "2023-10-01",
   "expiry_date": "2024-04-01",
   "origin": "Việt Nam",
   "unit": "Hộp",
-  "category_id": 1
-}
+  "category_id": 5
+} 
 ### get http://
-GET http://127.0.0.1:5000/products
-### http://127.0.0.1:5000/products
+GET http://127.0.0.1:5000/  products
+
+### lấy sản phẩm theeo category_id(mục lục)
+GET http://127.0.0.1:5000/products?category_id=5&max_price=50000
+
 

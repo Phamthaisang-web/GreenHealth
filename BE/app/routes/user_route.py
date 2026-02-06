@@ -2,11 +2,12 @@ from flask import Blueprint
 from app.controllers import user_controller
 
 user_bp = Blueprint("user", __name__, url_prefix="/users")
-
+#http://127.0.0.1:5000/users
 # ---------------------------
 # Các route công khai (Public)
 # ---------------------------
 user_bp.route("/register", methods=["POST"])(user_controller.register)
+#http://127.0.0.1:5000/users/register
 user_bp.route("/login", methods=["POST"])(user_controller.login)
 
 # ---------------------------

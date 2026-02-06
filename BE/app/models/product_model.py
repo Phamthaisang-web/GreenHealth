@@ -166,7 +166,7 @@ class ProductModel:
     # Xóa sản phẩm
     # ---------------------------
     def delete_product(self, product_id):
-        conn = self.get_connection()
+        conn = self.get_connection()    
         cursor = conn.cursor()
         sql = "DELETE FROM Product WHERE id=%s"
         cursor.execute(sql, (product_id,))

@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Tổng hợp tin tức</title>
+  </head>
+  <body>
+    <h1>lấy tất cả product</h1>
+    <button id="getall">Lấy tất cả sản phẩm</button>
+    <button id="filterPrice">Lấy theo giá dưới</button>
+    <input type="number" id="price" placeholder="Nhập giá tối đa" />
+
+    <div id="news"></div>
+
+    <script>
+      function renderNews(data) {
+        let html = "";
+        data.forEach((item) => {
+          html += `
+        <div style="border:1px solid #ccc; padding:10px; margin:10px;">
+          <h3>${item.name}</h3>
+          <p>${item.origin}</p>
+          <p>Giá: ${item.price}</p>
+        </div>
+      `;
+        });
+        document.getElementById("news").innerHTML = html;
+      }
+
+      // Lấy tất cả sản phẩm
+      document.getElementById("getall").onclick = function () {
+        fetch("http://127.0.0.1:5000/products")
+          .then((response) => response.json())
+          .then((data) => renderNews(data))
+          .catch((err) => console.error(err));
+      };
+
+      // 🔥 Lấy sản phẩm theo giá
+      document.getElementById("filterPrice").onclick = function () {
+        const price = document.getElementById("price").value;
+
+        if (!price) {
+          alert("Vui lòng nhập giá");
+          return;
+        }
+
+        const url = `http://127.0.0.1:5000/products?max_price=${price}`;
+
+        fetch(url)
+          .then((response) => response.json())
+          .then((data) => renderNews(data))
+          .catch((err) => console.error(err));
+      };
+    </script>
+  </body>
+</html>
