@@ -14,9 +14,7 @@ class OrderDetailModel:
     # 1. THÊM CHI TIẾT ĐƠN HÀNG
     # ---------------------------------------------------------
     def insert_order_detail(self, order_id, product_id, quantity, price):
-        """
-        Thêm sản phẩm vào đơn hàng và cập nhật tổng tiền Order.
-        """
+      
         conn = self.get_connection()
         cursor = conn.cursor()
 

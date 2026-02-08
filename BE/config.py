@@ -9,7 +9,7 @@ print("DB Name:", os.getenv("DATABASE"))
 
 DB_CONFIG = {
    
-    "host": "172.25.26.40", 
+    "host": "127.0.0.1", 
     "user": os.getenv("NAME_MYSQL"),
     "password": os.getenv("PASSWORD_MYSQL"),
     "database": os.getenv("DATABASE"),

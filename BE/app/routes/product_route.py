@@ -4,20 +4,13 @@ from app.utils.auth_middleware import token_required
 
 product_bp = Blueprint("product", __name__, url_prefix="/products")
 
-# ---------------------------
-# Các route công khai (Public)
-# ---------------------------
 product_bp.route("/", methods=["GET"])(product_controller.get_products)
-product_bp.route("/<int:product_id>", methods=["GET"])(product_controller.get_product)
+product_bp.route("/<int:product_id>", methods=["GET"])(product_controller.get_product_id)
 
-# ---------------------------
-# Các route cần xác thực & quyền Admin
-# ---------------------------
 
 @product_bp.route("/", methods=["POST"])
 @token_required
 def create_product():
-    # Kiểm tra quyền admin từ token
     if request.user.get('role') != 'admin':
         return jsonify({"message": "Chỉ Admin mới có quyền thêm sản phẩm"}), 403
     return product_controller.create_product()

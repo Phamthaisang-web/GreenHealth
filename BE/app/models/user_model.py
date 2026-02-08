@@ -1,6 +1,5 @@
 import mysql.connector
 from config import DB_CONFIG
-from datetime import datetime
 
 class UserModel:
     def __init__(self):
@@ -17,20 +16,15 @@ class UserModel:
         cursor = conn.cursor()
 
         sql = """
-            INSERT INTO user 
-            (name, phone, password, role, reward_points, status, created_at, updated_at)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO Users (name, phone, password, role)
+            VALUES (%s, %s, %s, %s)
         """
-        now = datetime.now()
+
         cursor.execute(sql, (
             name,
             phone,
             password_hash,
-            role,
-            0,              # reward_points
-            "Active",       # status
-            now,
-            now
+            role
         ))
 
         conn.commit()
@@ -46,8 +40,23 @@ class UserModel:
         conn = self.get_connection()
         cursor = conn.cursor(dictionary=True)
 
-        sql = "SELECT * FROM user WHERE phone = %s"
+        sql = "SELECT * FROM Users WHERE phone = %s"
         cursor.execute(sql, (phone,))
+        user = cursor.fetchone()
+
+        cursor.close()
+        conn.close()
+        return user
+
+    # ---------------------------
+    # Lấy user theo ID
+    # ---------------------------
+    def get_user_by_id(self, user_id):
+        conn = self.get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        sql = "SELECT * FROM Users WHERE id = %s"
+        cursor.execute(sql, (user_id,))
         user = cursor.fetchone()
 
         cursor.close()
@@ -63,7 +72,7 @@ class UserModel:
 
         sql = """
             SELECT id, name, phone, role, reward_points, status, created_at, updated_at
-            FROM user
+            FROM Users
         """
         cursor.execute(sql)
         users = cursor.fetchall()
@@ -75,48 +84,38 @@ class UserModel:
     # ---------------------------
     # Cập nhật user
     # ---------------------------
-    def update_user(self, user_id, name=None, phone=None, password_hash=None, role=None, reward_points=None, status=None):
+    def update_user(self, user_id, **kwargs):
         conn = self.get_connection()
         cursor = conn.cursor()
+
+        allowed_fields = {
+            "name", "phone", "password",
+            "role", "reward_points", "status"
+        }
 
         fields = []
         values = []
 
-        if name is not None:
-            fields.append("name=%s")
-            values.append(name)
-        if phone is not None:
-            fields.append("phone=%s")
-            values.append(phone)
-        if password_hash is not None:
-            fields.append("password=%s")
-            values.append(password_hash)
-        if role is not None:
-            fields.append("role=%s")
-            values.append(role)
-        if reward_points is not None:
-            fields.append("reward_points=%s")
-            values.append(reward_points)
-        if status is not None:
-            fields.append("status=%s")
-            values.append(status)
+        for key, value in kwargs.items():
+            if key in allowed_fields:
+                fields.append(f"{key} = %s")
+                values.append(value)
 
         if not fields:
             cursor.close()
             conn.close()
-            return False  # Không có gì để cập nhật
+            return False
 
-        fields.append("updated_at=%s")
-        values.append(datetime.now())
-
-        sql = f"UPDATE users SET {', '.join(fields)} WHERE id=%s"
         values.append(user_id)
+        sql = f"UPDATE Users SET {', '.join(fields)} WHERE id = %s"
 
         cursor.execute(sql, tuple(values))
         conn.commit()
+
+        updated = cursor.rowcount > 0
         cursor.close()
         conn.close()
-        return True
+        return updated
 
     # ---------------------------
     # Xóa user
@@ -125,20 +124,11 @@ class UserModel:
         conn = self.get_connection()
         cursor = conn.cursor()
 
-        sql = "DELETE FROM user WHERE id=%s"
+        sql = "DELETE FROM Users WHERE id = %s"
         cursor.execute(sql, (user_id,))
-
         conn.commit()
+
+        deleted = cursor.rowcount > 0
         cursor.close()
         conn.close()
-        return True
-# Thêm vào UserModel
-def get_user_by_id(self, user_id):
-    conn = self.get_connection()
-    cursor = conn.cursor(dictionary=True)
-    sql = "SELECT * FROM user WHERE id = %s"
-    cursor.execute(sql, (user_id,))
-    user = cursor.fetchone()
-    cursor.close()
-    conn.close()
-    return user
+        return deleted

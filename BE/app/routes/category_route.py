@@ -12,7 +12,7 @@ category_bp = Blueprint("category", __name__, url_prefix="/categories")
 category_bp.route("/", methods=["GET"])(category_controller.get_categories)
 
 # Lấy chi tiết danh mục
-category_bp.route("/<int:category_id>", methods=["GET"])(category_controller.get_category)
+category_bp.route("/<int:category_id>", methods=["GET"])(category_controller.get_category_id)
 
 # ---------------------------
 # Các route cần xác thực & quyền Admin

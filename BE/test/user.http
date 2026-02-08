@@ -4,7 +4,7 @@ Content-Type: application/json
 {
   "name": "Nguyen Van A",
   "phone": "0987654323",
-  "password": "123456",
+  "password": "01",
   "role": "admin",
   "status": "Active"
  

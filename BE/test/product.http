@@ -1,6 +1,6 @@
 POST http://127.0.0.1:5000/products
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3Njk3NTA4Mzd9.dZiAdhF9TIQITCnN31CA6pqZ5CrvSqNFZkMGXLxrbOU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo1LCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzA1NTI2MTh9.-i5sCF9jJYurx8OCBUTtdz8TeeLI1EVzw5_WXe28i-U
 
 {
   "name": "Sữa bò đen TH True Milk",
@@ -11,12 +11,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb
   "expiry_date": "2024-04-01",
   "origin": "Việt Nam",
   "unit": "Hộp",
-  "category_id": 5
+  "category_id": 1,
+  "supplier_id": 2
 } 
 ### get http://
-GET http://127.0.0.1:5000/  products
+GET http://127.0.0.1:5000/products
 
 ### lấy sản phẩm theeo category_id(mục lục)
-GET http://127.0.0.1:5000/products?category_id=5&max_price=50000
+GET http://127.0.0.1:5000/products/7
 
 
