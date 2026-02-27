@@ -1,0 +1,7 @@
+from flask import Blueprint
+from app.controllers.otp_controller import send_otp, verify_otp
+
+otp_bp = Blueprint("otp", __name__, url_prefix="/otp")
+
+otp_bp.route("/send", methods=["POST"])(send_otp)
+otp_bp.route("/verify", methods=["POST"])(verify_otp)

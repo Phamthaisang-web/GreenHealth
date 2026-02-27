@@ -4,9 +4,7 @@ class CategoryService:
     def __init__(self):
         self.category_model = CategoryModel()
 
-    # ---------------------------
     # Tạo category
-    # ---------------------------
     def create_category(self, data):
         name = data.get("name")
 
@@ -19,15 +17,11 @@ class CategoryService:
             image=data.get("image")
         )
 
-    # ---------------------------
     # Lấy tất cả category
-    # ---------------------------
     def get_all_categories(self):
         return self.category_model.select_all_categories()
 
-    # ---------------------------
     # Lấy chi tiết category
-    # ---------------------------
     def get_category_details(self, category_id):
         if not category_id:
             raise ValueError("Thiếu category_id")
@@ -38,9 +32,7 @@ class CategoryService:
 
         return category
 
-    # ---------------------------
     # Cập nhật category
-    # ---------------------------
     def update_category(self, category_id, data):
         if not category_id:
             raise ValueError("Thiếu category_id")

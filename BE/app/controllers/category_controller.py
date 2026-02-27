@@ -3,17 +3,10 @@ from app.services.category_service import CategoryService
 
 category_service = CategoryService()
 
-# ---------------------------
-# Lấy danh sách danh mục
-# ---------------------------
 def get_categories():
     categories = category_service.get_all_categories()
     return jsonify(categories), 200
 
-
-# ---------------------------
-# Lấy chi tiết một danh mục
-# ---------------------------
 def get_category_id(category_id):
     try:
         category = category_service.get_category_details(category_id)
@@ -22,9 +15,6 @@ def get_category_id(category_id):
         return jsonify({"message": str(e)}), 404
 
 
-# ---------------------------
-# Tạo danh mục mới
-# ---------------------------
 def create_category():
     data = request.json
     if not data:
@@ -40,9 +30,6 @@ def create_category():
         return jsonify({"message": str(e)}), 400
 
 
-# ---------------------------
-# Cập nhật danh mục
-# ---------------------------
 def update_category(category_id):
     data = request.json
     if not data:
@@ -55,9 +42,6 @@ def update_category(category_id):
         return jsonify({"message": str(e)}), 400
 
 
-# ---------------------------
-# Xóa danh mục
-# ---------------------------
 def delete_category(category_id):
     try:
         category_service.delete_category(category_id)

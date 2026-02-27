@@ -3,9 +3,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-print("--- Database Configuration ---")
-print("User:", os.getenv("NAME_MYSQL"))
-print("DB Name:", os.getenv("DATABASE"))
 
 DB_CONFIG = {
    
@@ -15,3 +12,8 @@ DB_CONFIG = {
     "database": os.getenv("DATABASE"),
     "port": 3306
 }
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+MAX_CONTENT_LENGTH = 5 * 1024 * 1024  # 5MB

@@ -1,0 +1,16 @@
+POST http://127.0.0.1:5000/addresses
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2LCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzA1NTcxNTR9.YdElZSQIgMOOFJafxXdIQ4M_ZU-6dMbZ15Jf38AFZes
+
+{
+  "receiver_name": "Nguyen Van A",
+  "phone": "0123456789",
+  "address_line": "456 Tran Phu",
+  "ward": "Hai Chau 4",
+  "district": "Hai Chau",
+  "city": "Da Nang",
+  "is_default": true
+}
+### get http://
+GET http://127.0.0.1:5000/addresses
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2LCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzA1NTcxNTR9.YdElZSQIgMOOFJafxXdIQ4M_ZU-6dMbZ15Jf38AFZes

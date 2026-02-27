@@ -1,0 +1,12 @@
+GET http://127.0.0.1:5000/suppliers
+###
+POST http://127.0.0.1:5000/suppliers
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzE5NTU4OTh9.pomWpS7kI6ghjqsUDp44hM1uNkzj-4IJGTRKAcBoxCQ
+
+{
+  "name": "Công nghiêp trứng ",
+  "phone": "0908123456",
+  "address": "123 Đường ABC, Quận 1, TP. Hồ Chí Minh",
+  "description": "Công nghiệp trứng gà GreenHealth chuyên cung cấp trứng gà chất lượng cao, tươi ngon và giàu dinh dưỡng. Với quy trình sản xuất hiện đại và cam kết về chất lượng, chúng tôi đảm bảo mang đến cho khách hàng những sản phẩm trứng gà tốt nhất. Sản phẩm của chúng tôi được đóng gói cẩn thận để đảm bảo độ tươi ngon và an toàn thực phẩm. Chúng tôi tự hào là đối tác tin cậy của nhiều nhà hàng, siêu thị và khách hàng cá nhân trên toàn quốc."
+}

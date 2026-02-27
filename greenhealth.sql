@@ -1,11 +1,20 @@
-DROP DATABASE greenhealth;
-CREATE DATABASE greenhealth;
-USE greenhealth;
+drop database green;
+CREATE DATABASE green;
+USE green;
 
+CREATE TABLE email_otp (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    otp VARCHAR(6) NOT NULL,
+    expired_at DATETIME NOT NULL,
+    is_used BOOLEAN DEFAULT FALSE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 CREATE TABLE Users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    phone VARCHAR(20) NOT NULL UNIQUE,
+    phone VARCHAR(20) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     role ENUM('user', 'staff', 'admin') NOT NULL DEFAULT 'user',
     reward_points INT DEFAULT 0,
@@ -82,10 +91,10 @@ CREATE TABLE ProductImage (
     is_main BOOLEAN DEFAULT FALSE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_image_product
-        FOREIGN KEY (product_id) REFERENCES Product(id)
+        FOREIGN KEY (product_id)
+        REFERENCES Product(id)
         ON DELETE CASCADE
 );
-
 CREATE TABLE Orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     order_code VARCHAR(50) NOT NULL UNIQUE,
@@ -118,3 +127,4 @@ CREATE TABLE Order_Detail (
     CONSTRAINT fk_orderdetail_product
         FOREIGN KEY (product_id) REFERENCES Product(id)
 );
+

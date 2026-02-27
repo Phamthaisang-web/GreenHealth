@@ -1,25 +1,58 @@
 from flask import Blueprint
 from app.controllers import user_controller
+from app.utils.auth_middleware import token_required
+from app.utils.role_middleware import role_required
 
 user_bp = Blueprint("user", __name__, url_prefix="/users")
-#http://127.0.0.1:5000/users
-# ---------------------------
-# Các route công khai (Public)
-# ---------------------------
-user_bp.route("/register", methods=["POST"])(user_controller.register)
-#http://127.0.0.1:5000/users/register
-user_bp.route("/login", methods=["POST"])(user_controller.login)
 
-# ---------------------------
-# Các route quản lý User
-# ---------------------------
+# =====================================================
+# PUBLIC ROUTES (KHÔNG CẦN TOKEN)
+# =====================================================
 
-# Lấy danh sách tất cả người dùng
-user_bp.route("/", methods=["GET"])(user_controller.get_users)
+@user_bp.route("/register", methods=["POST"])
+def register():
+    return user_controller.register()
 
-# Lấy thông tin chi tiết một người dùng theo ID
-user_bp.route("/<int:user_id>", methods=["GET"])(user_controller.get_user_by_id)
 
-# Lưu ý: Nếu bạn muốn hỗ trợ thêm Cập nhật và Xóa, hãy thêm các dòng sau:
-user_bp.route("/<int:user_id>", methods=["PUT"])(user_controller.update_user)
-user_bp.route("/<int:user_id>", methods=["DELETE"])(user_controller.delete_user)
+@user_bp.route("/login", methods=["POST"])
+def login():
+    return user_controller.login()
+
+
+# =====================================================
+# AUTH ROUTES (CẦN TOKEN – LẤY user_id TỪ TOKEN)
+# =====================================================
+
+@user_bp.route("/change-password", methods=["POST"])
+@token_required
+def change_password():
+    return user_controller.change_password()
+
+
+# =====================================================
+# ADMIN / MANAGEMENT ROUTES
+# =====================================================
+
+@user_bp.route("/", methods=["GET"])
+@token_required
+@role_required("admin", "staff")
+def get_users():
+    return user_controller.get_users()
+
+
+@user_bp.route("/<int:user_id>", methods=["GET"])
+@token_required
+def get_user_by_id(user_id):
+    return user_controller.get_user_by_id(user_id)
+
+
+@user_bp.route("/", methods=["PUT"])
+@token_required
+def update_user():
+    return user_controller.update_user()
+
+
+@user_bp.route("/<int:user_id>", methods=["DELETE"])
+@token_required
+def delete_user(user_id):
+    return user_controller.delete_user(user_id)

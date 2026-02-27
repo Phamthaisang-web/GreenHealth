@@ -1,10 +1,10 @@
 POST http://127.0.0.1:5000/categories
 Content-Type: application/json
-#add token
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3Njk3NTA4Mzd9.dZiAdhF9TIQITCnN31CA6pqZ5CrvSqNFZkMGXLxrbOU
-
+Authorization: Bearer 
 {
-  "name": "Trái cây tươi và thơm ngon"
+  "name": "Trứng",
+  "description": "Các loại trứng tươi ngon, giàu dinh dưỡng, được đóng gói trong hộp tiện lợi, bảo quản tốt.",
+  "image": "/uploads/trung-cut.png"
 }
 
 ### lấy tất cả

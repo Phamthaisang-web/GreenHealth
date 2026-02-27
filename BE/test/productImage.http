@@ -1,0 +1,13 @@
+POST http://127.0.0.1:5000/product-images
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzE5NTQ2MDd9.3BRmQ9aQA1q2vbXvfmwXDpJqsVq7pQFUOGwVo-8PWgw
+
+{
+  "product_id": 2,
+  "image_url": "/uploads/trung-cut.png"
+}
+###
+GET http://127.0.0.1:5000/product-images/product/5
+###
+GET http://127.0.0.1:5000/product-images/product/2/main
+

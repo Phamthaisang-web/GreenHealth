@@ -17,8 +17,6 @@ class ProductService:
         for field in required_fields:
             if not data.get(field):
                 raise ValueError(f"Thiếu trường bắt buộc: {field}")
-
-
         try:
             price = float(data["price"])
         except ValueError:
@@ -27,13 +25,12 @@ class ProductService:
         if price < 0:
             raise ValueError("Giá sản phẩm không được âm")
 
-       
         try:
             expiry_date = datetime.strptime(data["expiry_date"], "%Y-%m-%d").date()
             manufacture_date = datetime.strptime(data["manufacture_date"], "%Y-%m-%d").date()
         except ValueError:
             raise ValueError("Ngày phải có định dạng YYYY-MM-DD")
-
+        
         if expiry_date <= manufacture_date:
             raise ValueError("Ngày hết hạn phải lớn hơn ngày sản xuất")
 

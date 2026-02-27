@@ -1,63 +1,95 @@
 from app.models.user_model import UserModel
+from app.services.otp_service import OTPService
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
+
 
 class UserService:
     def __init__(self):
         self.user_model = UserModel()
-
+        self.otp_service = OTPService()
     # ---------------------------
     # Đăng ký user
     # ---------------------------
-    def register_user(self, name, phone, password, role="user"):
+    def register_user(self, name, phone, email, password, otp, role="user"):
 
-        # Validate name
+    # ---------------------------
+    # Validate cơ bản
+    # ---------------------------
         if not name or len(name.strip()) < 2:
             return {"error": "Tên không hợp lệ"}
 
-        # Validate phone
         if not phone or not re.fullmatch(r"\d{9,11}", phone):
             return {"error": "Số điện thoại không hợp lệ"}
 
-        # Validate password
+        if not email or not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", email):
+            return {"error": "Email không hợp lệ"}
+
         if not password or len(password) < 6:
             return {"error": "Mật khẩu phải >= 6 ký tự"}
 
-        # Validate role
         if role not in ["user", "staff", "admin"]:
             return {"error": "Role không hợp lệ"}
 
-        # Check tồn tại
-        if self.user_model.get_user_by_phone(phone):
-            return {"error": "Số điện thoại đã tồn tại"}
+        if self.user_model.get_user_by_email(email):
+            return {"error": "Email đã tồn tại"}
 
+    
+        otp_result = self.otp_service.verify_email_otp(email, otp)
+        if "error" in otp_result:
+            return otp_result   
+
+    
         password_hash = generate_password_hash(password)
-        user_id = self.user_model.insert_user(name, phone, password_hash, role)
 
-        return {"message": "Đăng ký thành công", "user_id": user_id}
+        user_id = self.user_model.insert_user(
+            name=name,
+            phone=phone,
+            email=email,
+            password_hash=password_hash,
+            role=role
+        )
+
+        return {
+            "message": "Đăng ký thành công",
+            "user_id": user_id
+        }
 
     # ---------------------------
     # Đăng nhập
     # ---------------------------
-    def login_user(self, phone, password):
-        user = self.user_model.get_user_by_phone(phone)
+    def login_user(self, login_value, password):
+    # login_value có thể là email hoặc phone
+        if "@" in login_value:
+            user = self.user_model.get_user_by_email(login_value)
+        else:
+            user = self.user_model.get_user_by_phone(login_value)
 
         if not user:
-            return {"error": "Sai số điện thoại hoặc mật khẩu"}
+            return {"error": "Sai thông tin đăng nhập hoặc mật khẩu"}
 
         if user["status"] == "blocked":
             return {"error": "Tài khoản đã bị khóa"}
 
         if not check_password_hash(user["password"], password):
-            return {"error": "Sai số điện thoại hoặc mật khẩu"}
+            return {"error": "Sai thông tin đăng nhập hoặc mật khẩu"}
 
-        return user
+        return {
+            "id": user["id"],
+            "name": user["name"],
+            "email": user["email"],
+            "phone": user["phone"],
+            "role": user["role"],
+            "reward_points": user["reward_points"],
+            "status": user["status"]
+        }
+
 
     # ---------------------------
     # Lấy danh sách user
     # ---------------------------
     def get_users(self):
-        return self.user_model.select_all_users()
+        return self.user_model.get_all_users()
 
     # ---------------------------
     # Lấy user theo ID
@@ -70,6 +102,7 @@ class UserService:
         if not user:
             return {"error": "User không tồn tại"}
 
+        user.pop("password", None)
         return user
 
     # ---------------------------
@@ -81,9 +114,10 @@ class UserService:
         if not user:
             return {"error": "User không tồn tại"}
 
-        allowed_fields = {"name", "password", "status"}
+        allowed_fields = {"name", "email", "password", "status"}
 
         update_data = {}
+
         for k, v in kwargs.items():
             if k in allowed_fields:
                 update_data[k] = v
@@ -97,6 +131,11 @@ class UserService:
                 return {"error": "Mật khẩu phải >= 6 ký tự"}
             update_data["password"] = generate_password_hash(update_data["password"])
 
+        # Email
+        if "email" in update_data:
+            if not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", update_data["email"]):
+                return {"error": "Email không hợp lệ"}
+
         # Status
         if "status" in update_data:
             if update_data["status"] not in ["active", "blocked"]:
@@ -109,7 +148,7 @@ class UserService:
         return {"message": "Cập nhật user thành công"}
 
     # ---------------------------
-    # Xóa user
+    # Xóa user (soft delete)
     # ---------------------------
     def delete_user(self, user_id):
 
@@ -120,5 +159,25 @@ class UserService:
         if user["role"] == "admin":
             return {"error": "Không được xóa admin"}
 
-        self.user_model.delete_user(user_id)
-        return {"message": "Xóa user thành công"}
+        self.user_model.update_user(user_id, status="blocked")
+        return {"message": "User đã bị khóa"}
+
+    # ---------------------------
+    # Đổi mật khẩu
+    # ---------------------------
+    def change_user_password(self, user_id, old_password, new_password):
+
+        user = self.user_model.get_user_by_id(user_id)
+        if not user:
+            return {"error": "User không tồn tại"}
+
+        if not check_password_hash(user["password"], old_password):
+            return {"error": "Mật khẩu cũ không đúng"}
+
+        if len(new_password) < 6:
+            return {"error": "Mật khẩu mới phải >= 6 ký tự"}
+
+        new_password_hash = generate_password_hash(new_password)
+        self.user_model.update_user(user_id, password=new_password_hash)
+
+        return {"message": "Đổi mật khẩu thành công"}

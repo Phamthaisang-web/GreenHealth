@@ -1,23 +1,23 @@
 POST http://127.0.0.1:5000/products
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo1LCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzA1NTI2MTh9.-i5sCF9jJYurx8OCBUTtdz8TeeLI1EVzw5_WXe28i-U
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzE5NTc2NDR9.bNF33Aj1ta5ELIYozrTMk1iSO0VMFomocT8JXYV4v4s
 
 {
-  "name": "Sữa bò đen TH True Milk",
-  "image": "https://example.com/images/sua-th.jpg",
-  "description": "Sữa bò nhập từ úc sạch nguyên chất 100%, dung tích 10l.",
-  "price": 60000,
-  "manufacture_date": "2023-10-01",
-  "expiry_date": "2024-04-01",
+  "name": "Trứng gà ta hộp 6 quả từ 180g-210g",
+  "description": "Trứng gà ta hộp 6 quả từ 180g-210g là sản phẩm trứng gà được đóng gói trong hộp chứa 6 quả, với trọng lượng mỗi quả từ 180g đến 210g. Trứng gà ta thường được biết đến với chất lượng cao, hương vị thơm ngon và giá trị dinh dưỡng tốt. Sản phẩm này thích hợp cho việc sử dụng trong nấu ăn hàng ngày, làm bánh hoặc chế biến các món ăn khác nhau.",
+  "price": 27000,
+  "manufacture_date": "2026-2-24",
+  "expiry_date": "2026-3-24",
   "origin": "Việt Nam",
   "unit": "Hộp",
   "category_id": 1,
-  "supplier_id": 2
-} 
-### get http://
-GET http://127.0.0.1:5000/products
+  "supplier_id": 1
+}
 
+### get http://
+GET http://127.0.0.1:5000/products?name=Tao
+### 
+GET http://127.0.0.1:5000/products
 ### lấy sản phẩm theeo category_id(mục lục)
 GET http://127.0.0.1:5000/products/7
-
 

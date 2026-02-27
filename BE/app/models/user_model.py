@@ -1,6 +1,7 @@
 import mysql.connector
 from config import DB_CONFIG
 
+
 class UserModel:
     def __init__(self):
         self.db_config = DB_CONFIG
@@ -11,24 +12,26 @@ class UserModel:
     # ---------------------------
     # Tạo user mới
     # ---------------------------
-    def insert_user(self, name, phone, password_hash, role="user"):
+    def insert_user(self, name, phone, email, password_hash, role="user"):
         conn = self.get_connection()
         cursor = conn.cursor()
 
         sql = """
-            INSERT INTO Users (name, phone, password, role)
-            VALUES (%s, %s, %s, %s)
+            INSERT INTO Users (name, phone, email, password, role)
+            VALUES (%s, %s, %s, %s, %s)
         """
 
         cursor.execute(sql, (
             name,
             phone,
+            email,
             password_hash,
             role
         ))
 
         conn.commit()
         user_id = cursor.lastrowid
+
         cursor.close()
         conn.close()
         return user_id
@@ -42,6 +45,21 @@ class UserModel:
 
         sql = "SELECT * FROM Users WHERE phone = %s"
         cursor.execute(sql, (phone,))
+        user = cursor.fetchone()
+
+        cursor.close()
+        conn.close()
+        return user
+
+    # ---------------------------
+    # Lấy user theo email
+    # ---------------------------
+    def get_user_by_email(self, email):
+        conn = self.get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        sql = "SELECT * FROM Users WHERE email = %s"
+        cursor.execute(sql, (email,))
         user = cursor.fetchone()
 
         cursor.close()
@@ -66,12 +84,13 @@ class UserModel:
     # ---------------------------
     # Lấy tất cả user
     # ---------------------------
-    def select_all_users(self):
+    def get_all_users(self):
         conn = self.get_connection()
         cursor = conn.cursor(dictionary=True)
 
         sql = """
-            SELECT id, name, phone, role, reward_points, status, created_at, updated_at
+            SELECT id, name, phone, email, role,
+                   reward_points, status, created_at, updated_at
             FROM Users
         """
         cursor.execute(sql)
@@ -89,7 +108,7 @@ class UserModel:
         cursor = conn.cursor()
 
         allowed_fields = {
-            "name", "phone", "password",
+            "name", "phone", "email", "password",
             "role", "reward_points", "status"
         }
 
@@ -109,7 +128,7 @@ class UserModel:
         values.append(user_id)
         sql = f"UPDATE Users SET {', '.join(fields)} WHERE id = %s"
 
-        cursor.execute(sql, tuple(values))
+        cursor.execute(sql, values)
         conn.commit()
 
         updated = cursor.rowcount > 0

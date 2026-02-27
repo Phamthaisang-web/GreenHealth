@@ -2,24 +2,48 @@ POST http://127.0.0.1:5000/users/register
 Content-Type: application/json
 
 {
-  "name": "Nguyen Van A",
-  "phone": "0987654323",
-  "password": "01",
-  "role": "admin",
-  "status": "Active"
- 
+  "name": "Pham Thai Sang",
+  "phone": "0868873407",
+  "email": "phamthaisang1710@gmail.com",
+  "password": "0123456",
+  "otp": "559048",
+  "role": "admin"
+}
+### lấy otp
+POST http://127.0.0.1:5000/otp/send
+Content-Type: application/json
+
+{
+  "email": "phamthaisang1710@gmail.com"
 }
 
-###GET http://
-GET http://127.0.0.1:5000/users/login
 ###
 POST http://127.0.0.1:5000/users/login
 Content-Type: application/json
 
 {
-  "phone": "0987654323",
-  "password": "123456"
+  "login": "phamthaisang1710@gmail.com",
+  "password": "0123456"
 }
 
-###GET http://
+### cập nhập mk
+POST http://127.0.0.1:5000/users/change-password
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzA1NzA0MjF9.S8qbU3LmB98Dv0y_OkVw1hMmZdhZW7Uh89pBKLjn8ZY
 
+{
+  "old_password": "0123456",
+  "new_password": "123456"
+}
+###
+GET http://127.0.0.1:5000/users
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzIxNjI1MTh9.X_4sjkmAlhVvCppRrwvheagHT36pbB-bP9DvcJShMeE
+###
+PUT http://127.0.0.1:5000/users
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo5LCJyb2xlIjoidXNlciIsImV4cCI6MTc3MDU3MjIzNn0.cVA9_KzVreP1paPODqoxyfBcvurUfN51ygqD7tf8bN4
+
+{
+  "name": "Nguyen Van B"
+}
