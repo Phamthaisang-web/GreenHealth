@@ -1,23 +1,33 @@
 POST http://127.0.0.1:5000/products
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzE5NTc2NDR9.bNF33Aj1ta5ELIYozrTMk1iSO0VMFomocT8JXYV4v4s
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzI3NzIyNjJ9.b0s6gevOKuhC6_zJuAp1kn2brQrtCoplsSdXL19CruM
 
 {
   "name": "Trứng gà ta hộp 6 quả từ 180g-210g",
-  "description": "Trứng gà ta hộp 6 quả từ 180g-210g là sản phẩm trứng gà được đóng gói trong hộp chứa 6 quả, với trọng lượng mỗi quả từ 180g đến 210g. Trứng gà ta thường được biết đến với chất lượng cao, hương vị thơm ngon và giá trị dinh dưỡng tốt. Sản phẩm này thích hợp cho việc sử dụng trong nấu ăn hàng ngày, làm bánh hoặc chế biến các món ăn khác nhau.",
+  "description": "Trứng gà ta hộp 6 quả từ 180g-210g là sản phẩm trứng gà được đóng gói trong hộp chứa 6 quả...",
   "price": 27000,
-  "manufacture_date": "2026-2-24",
-  "expiry_date": "2026-3-24",
+  "manufacture_date": "2026-02-24",
+  "expiry_date": "2026-03-24",
   "origin": "Việt Nam",
   "unit": "Hộp",
   "category_id": 1,
   "supplier_id": 1
 }
+###
+PUT http://127.0.0.1:5000/products/4
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzI3NzIyNjJ9.b0s6gevOKuhC6_zJuAp1kn2brQrtCoplsSdXL19CruM
 
-### get http://
-GET http://127.0.0.1:5000/products?name=Tao
-### 
+{
+  "name": "Tr-210g"
+}
+###
 GET http://127.0.0.1:5000/products
+### 
+GET http://127.0.0.1:5000/products/
 ### lấy sản phẩm theeo category_id(mục lục)
-GET http://127.0.0.1:5000/products/7
+GET http://127.0.0.1:5000/products/2
 
+###
+DELETE  http://127.0.0.1:5000/products/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzI3MjQyMDB9.wmhrcPoI6ZYump0zZRtR6ExN2Y4qM71miWdrUMyiYXI

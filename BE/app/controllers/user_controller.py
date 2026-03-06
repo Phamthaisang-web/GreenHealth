@@ -13,7 +13,7 @@ def generate_token(user):
     payload = {
         "user_id": user["id"],
         "role": user["role"],
-        "exp": datetime.utcnow() + timedelta(hours=2)
+        "exp": datetime.utcnow() + timedelta(hours=24)
     }
     return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
 def jwt_required(f):
@@ -115,6 +115,15 @@ def get_user_by_id(user_id):
     result.pop("password", None)
     return jsonify(result), 200
 
+def get_me():
+    user_id = request.user["user_id"]   # 👈 LẤY TỪ TOKEN
+
+    user = user_service.get_user_by_id(user_id)
+    if "error" in user:
+        return jsonify(user), 404
+
+    user.pop("password", None)
+    return jsonify(user), 200
 def update_user():
     user_id = request.user["user_id"]
     data = request.json or {}

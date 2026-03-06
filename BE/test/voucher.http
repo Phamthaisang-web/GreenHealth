@@ -1,0 +1,17 @@
+POST http://127.0.0.1:5000/vouchers/
+Content-Type: application/json
+Authorization: Bearer 
+
+{
+  "code": "SALE10",
+  "discount_type": "percent",
+  "discount_value": 10,
+  "min_order_value": 100000,
+  "max_discount": 50000,
+  "quantity": 100,
+  "start_date": "2026-03-01",
+  "end_date": "2026-12-31"
+}
+
+###
+GET http://127.0.0.1:5000/vouchers/

@@ -17,12 +17,13 @@ type Props = {
 export default function ProductCard({ product }: Props) {
   const navigation = useNavigation<any>();
 
-  const imageUri = product.image_url
-    ? product.image_url
-    : "https://via.placeholder.com/300x300.png?text=No+Image";
+  const imageUri =
+    product.image_url ??
+    "https://via.placeholder.com/300x300.png?text=No+Image";
 
   return (
     <Pressable
+      style={{ flex: 1 }}
       onPress={() =>
         navigation.navigate("ProductDetail", {
           productId: product.id,
@@ -38,7 +39,6 @@ export default function ProductCard({ product }: Props) {
             },
           }}
           style={styles.image}
-          resizeMode="cover"
         />
 
         <Text numberOfLines={2} style={styles.name}>
@@ -54,6 +54,7 @@ export default function ProductCard({ product }: Props) {
     </Pressable>
   );
 }
+
 const styles = StyleSheet.create({
   card: {
     flex: 1,
@@ -64,14 +65,10 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    aspectRatio: 1, // 🔒 FIX CHIỀU CAO
+    aspectRatio: 1,
     borderRadius: 10,
     marginBottom: 8,
     backgroundColor: "#ddd",
-  },
-  content: {
-    flexGrow: 1,
-    justifyContent: "space-between",
   },
   name: {
     fontSize: 14,

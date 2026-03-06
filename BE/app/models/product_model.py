@@ -7,10 +7,9 @@ class ProductModel:
 
     def get_connection(self):
         return mysql.connector.connect(**self.db_config)
+    
     # Thêm sản phẩm mới
-    def insert_product(
-        self,
-        name,
+    def insert_product(self,name,
         description,
         price,
         expiry_date,
@@ -63,7 +62,8 @@ class ProductModel:
     def select_all_products(
         self,
         name=None,
-        category_id=None,
+        category_name=None,
+        supplier_name=None,
         min_price=None,
         max_price=None,
         page=1,
@@ -72,26 +72,39 @@ class ProductModel:
         conn = self.get_connection()
         cursor = conn.cursor(dictionary=True)
 
-        sql = "SELECT * FROM Product WHERE 1=1"
+        sql = """
+            SELECT 
+                p.*,
+                c.name AS category_name,
+                s.name AS supplier_name
+            FROM Product p
+            LEFT JOIN Category c ON p.category_id = c.id
+            LEFT JOIN Supplier s ON p.supplier_id = s.id
+            WHERE 1=1
+        """
         params = []
 
         if name:
-            sql += " AND name LIKE %s"
+            sql += " AND p.name LIKE %s"
             params.append(f"%{name}%")
 
-        if category_id:
-            sql += " AND category_id = %s"
-            params.append(category_id)
+        if category_name:
+            sql += " AND c.name LIKE %s"
+            params.append(f"%{category_name}%")
+
+        if supplier_name:
+            sql += " AND s.name LIKE %s"
+            params.append(f"%{supplier_name}%")
 
         if min_price is not None:
-            sql += " AND price >= %s"
+            sql += " AND p.price >= %s"
             params.append(min_price)
 
         if max_price is not None:
-            sql += " AND price <= %s"
+            sql += " AND p.price <= %s"
             params.append(max_price)
 
-        sql += " ORDER BY created_at DESC"
+        sql += " ORDER BY p.created_at DESC"
         offset = (page - 1) * page_size
         sql += " LIMIT %s OFFSET %s"
         params.extend([page_size, offset])
@@ -102,6 +115,7 @@ class ProductModel:
         cursor.close()
         conn.close()
         return products
+
     # Cập nhật sản phẩm
     def update_product(self, product_id, **kwargs):
         conn = self.get_connection()

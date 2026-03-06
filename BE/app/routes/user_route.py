@@ -19,19 +19,12 @@ def login():
     return user_controller.login()
 
 
-# =====================================================
-# AUTH ROUTES (CẦN TOKEN – LẤY user_id TỪ TOKEN)
-# =====================================================
-
 @user_bp.route("/change-password", methods=["POST"])
 @token_required
 def change_password():
     return user_controller.change_password()
 
 
-# =====================================================
-# ADMIN / MANAGEMENT ROUTES
-# =====================================================
 
 @user_bp.route("/", methods=["GET"])
 @token_required
@@ -51,6 +44,10 @@ def get_user_by_id(user_id):
 def update_user():
     return user_controller.update_user()
 
+@user_bp.route("/me", methods=["GET"])
+@token_required
+def get_me():
+    return user_controller.get_me()
 
 @user_bp.route("/<int:user_id>", methods=["DELETE"])
 @token_required

@@ -1,8 +1,10 @@
-GET http://127.0.0.1:5000/suppliers
+GET http://127.0.0.1:5000/suppliers/1
+###
+GET http://127.0.0.1:5000/suppliers/
 ###
 POST http://127.0.0.1:5000/suppliers
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzE5NTU4OTh9.pomWpS7kI6ghjqsUDp44hM1uNkzj-4IJGTRKAcBoxCQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzIyOTE2MjR9.NrafZzjQNPbloLrMNClvBqDpzUH-hBCiJ5TPl21_gIg
 
 {
   "name": "Công nghiêp trứng ",

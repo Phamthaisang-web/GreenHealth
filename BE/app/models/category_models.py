@@ -8,7 +8,6 @@ class CategoryModel:
     def get_connection(self):
         return mysql.connector.connect(**self.db_config)
 
-    # Thêm category
     def insert_category(self, name, description=None, image=None):
         conn = self.get_connection()
         cursor = conn.cursor()
@@ -24,7 +23,6 @@ class CategoryModel:
         cursor.close()
         conn.close()
         return category_id
-    # Lấy category theo ID
     def get_category_by_id(self, category_id):
         conn = self.get_connection()
         cursor = conn.cursor(dictionary=True)
@@ -36,7 +34,6 @@ class CategoryModel:
         cursor.close()
         conn.close()
         return category
-    # Lấy tất cả category
     def select_all_categories(self):
         conn = self.get_connection()
         cursor = conn.cursor(dictionary=True)
@@ -49,7 +46,6 @@ class CategoryModel:
         conn.close()
         return categories
 
-    # Cập nhật category
     def update_category(self, category_id, **kwargs):
         conn = self.get_connection()
         cursor = conn.cursor()
@@ -74,7 +70,7 @@ class CategoryModel:
         cursor.close()
         conn.close()
         return success
-    # Xóa category
+    
     def delete_category(self, category_id):
         conn = self.get_connection()
         cursor = conn.cursor()

@@ -1,7 +1,6 @@
-drop database green;
-CREATE DATABASE green;
-USE green;
-
+drop database greenhealth;
+CREATE DATABASE greenhealth;
+USE greenhealth;
 CREATE TABLE email_otp (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
@@ -33,7 +32,6 @@ CREATE TABLE Category (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP 
         ON UPDATE CURRENT_TIMESTAMP
 );
-
 CREATE TABLE Address (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -97,21 +95,69 @@ CREATE TABLE ProductImage (
 );
 CREATE TABLE Orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    order_code VARCHAR(50) NOT NULL UNIQUE,
+
+    order_code VARCHAR(50) UNIQUE NOT NULL,
+
     user_id INT NOT NULL,
     address_id INT NOT NULL,
-    total_amount DECIMAL(10,2) NOT NULL,
-    status ENUM('pending', 'shipping', 'completed', 'cancelled')
-        NOT NULL DEFAULT 'pending',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP 
-        ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_order_user
-        FOREIGN KEY (user_id) REFERENCES Users(id),
-    CONSTRAINT fk_order_address
-        FOREIGN KEY (address_id) REFERENCES Address(id)
-);
 
+    total_amount_before DECIMAL(10,2) NOT NULL,
+    discount_amount DECIMAL(10,2) DEFAULT 0,
+    total_amount DECIMAL(10,2) NOT NULL,
+
+    voucher_code VARCHAR(50),
+
+    status ENUM(
+        'PENDING',
+        'SHIPPING',
+        'COMPLETED',
+        'CANCELLED'
+    ) DEFAULT 'PENDING',
+
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+CREATE TABLE Voucher (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    code VARCHAR(50) UNIQUE NOT NULL,
+
+    discount_type ENUM('percent','fixed') NOT NULL,
+    discount_value DECIMAL(10,2) NOT NULL,
+
+    min_order_value DECIMAL(10,2) DEFAULT 0,
+    max_discount DECIMAL(10,2) NULL,
+
+    quantity INT NOT NULL DEFAULT 0,
+
+    status ENUM('active','inactive') DEFAULT 'active',
+
+    start_date DATETIME NOT NULL,
+    end_date DATETIME NOT NULL,
+
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+CREATE TABLE Review (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    order_id INT NOT NULL,
+
+    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+
+    comment TEXT,
+
+    status ENUM('active','hidden','deleted') DEFAULT 'active',
+
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES Product(id) ON DELETE CASCADE,
+    FOREIGN KEY (order_id) REFERENCES Orders(id) ON DELETE CASCADE
+);
 CREATE TABLE Order_Detail (
     id INT AUTO_INCREMENT PRIMARY KEY,
     order_id INT NOT NULL,

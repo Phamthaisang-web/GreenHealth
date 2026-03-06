@@ -40,7 +40,7 @@ class ProductService:
         if int(data["category_id"]) <= 0:
             raise ValueError("category_id không hợp lệ")
  
-        return self.product_model.insert_product(
+        return  self.product_model.insert_product(
             name=data["name"],
             description=data.get("description"),
             price=price,
@@ -51,19 +51,28 @@ class ProductService:
             supplier_id=data["supplier_id"],
             category_id=data["category_id"]
         )
-    # Lấy danh sách sản phẩm
-    def get_all_products(self, filters=None, page=1, page_size=10):
-        if filters is None:
-            filters = {}
+       
 
+    def get_all_products(
+        self,
+        name=None,
+        category_name=None,
+        supplier_name=None,
+        min_price=None,
+        max_price=None,
+        page=1,
+        page_size=10
+    ):
         return self.product_model.select_all_products(
-            name=filters.get("name"),
-            category_id=filters.get("category_id"),
-            min_price=filters.get("min_price"),
-            max_price=filters.get("max_price"),
+            name=name,
+            category_name=category_name,
+            supplier_name=supplier_name,
+            min_price=min_price,
+            max_price=max_price,
             page=page,
             page_size=page_size
         )
+
     # tìm kiếm bằng id
     def get_product_details(self, product_id):
         product = self.product_model.get_product_by_id(product_id)

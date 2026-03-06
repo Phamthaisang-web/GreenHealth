@@ -1,0 +1,28 @@
+POST http://127.0.0.1:5000/orders
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzI4NDI3NzF9.uygOxSPo0qLmQdgg-AaJTctdXLCeQQzSAmkRMa7llys
+
+{ 
+  "address_id": 1,
+  "voucher_code": "SALE20",
+  "cart_items": [
+    {
+      "product_id": 1,
+      "quantity": 1
+    }
+  ]
+}
+### lấy order của tất cả user
+GET http://127.0.0.1:5000/orders
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzI4NDI3NzF9.uygOxSPo0qLmQdgg-AaJTctdXLCeQQzSAmkRMa7llys
+
+###
+
+PUT http://127.0.0.1:5000/orders/status/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzI2MjkxMDB9.fO0XMlUGXZzm-uq7HZOe6ADiYFrKCwrSCzqjc8qgZyI
+
+{
+    "status": "COMPLETED"
+}

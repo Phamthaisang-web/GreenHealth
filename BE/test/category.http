@@ -1,6 +1,7 @@
 POST http://127.0.0.1:5000/categories
 Content-Type: application/json
-Authorization: Bearer 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoidXNlciIsImV4cCI6MTc3MjgxOTAzN30.Zzr9M35xd63VY73PTpdBPxGPBGNgVttHldCc7K6DycQ
+
 {
   "name": "Trứng",
   "description": "Các loại trứng tươi ngon, giàu dinh dưỡng, được đóng gói trong hộp tiện lợi, bảo quản tốt.",
@@ -11,6 +12,6 @@ Authorization: Bearer
 GET http://127.0.0.1:5000/categories
 
 ### lấy từng cái theo_id
-GET http://127.0.0.1:5000/categories/3
+GET http://127.0.0.1:5000/categories/1
 
 

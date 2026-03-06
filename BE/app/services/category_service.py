@@ -29,7 +29,7 @@ class CategoryService:
         category = self.category_model.get_category_by_id(category_id)
         if not category:
             raise ValueError("Category không tồn tại")
-
+        
         return category
 
     # Cập nhật category

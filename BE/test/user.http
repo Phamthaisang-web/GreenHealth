@@ -2,19 +2,20 @@ POST http://127.0.0.1:5000/users/register
 Content-Type: application/json
 
 {
-  "name": "Pham Thai Sang",
-  "phone": "0868873407",
-  "email": "phamthaisang1710@gmail.com",
-  "password": "0123456",
-  "otp": "559048",
+  "name": "Lê Văn Siêu",
+  "phone": "0765428817",
+  "email": "levansieu1708@gmail.com",
+  "password": "123456",
+  "otp": "504073",
   "role": "admin"
+
 }
 ### lấy otp
 POST http://127.0.0.1:5000/otp/send
 Content-Type: application/json
 
 {
-  "email": "phamthaisang1710@gmail.com"
+  "email": "levansieu1708@gmail.com"
 }
 
 ###
@@ -22,23 +23,23 @@ POST http://127.0.0.1:5000/users/login
 Content-Type: application/json
 
 {
-  "login": "phamthaisang1710@gmail.com",
-  "password": "0123456"
+  "login": "levansieu1708@gmail.com",
+  "password": "123456"
 }
 
 ### cập nhập mk
 POST http://127.0.0.1:5000/users/change-password
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzA1NzA0MjF9.S8qbU3LmB98Dv0y_OkVw1hMmZdhZW7Uh89pBKLjn8ZY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoidXNlciIsImV4cCI6MTc3MjM3NzY5N30.RtOftCQacxry5rphguq831P53vRmYpXH4gychpoDXFw
 
 {
   "old_password": "0123456",
   "new_password": "123456"
 }
 ###
-GET http://127.0.0.1:5000/users
+GET http://127.0.0.1:5000/users/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzIxNjI1MTh9.X_4sjkmAlhVvCppRrwvheagHT36pbB-bP9DvcJShMeE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzI4MTY1NzZ9.S5f4D_JUSMROwF_-dI2IrMjN7L0BRYhQ9KP5EADvCNU
 ###
 PUT http://127.0.0.1:5000/users
 Content-Type: application/json

@@ -11,14 +11,7 @@ order_bp = Blueprint("order", __name__, url_prefix="/orders")
 @order_bp.route("/", methods=["POST"])
 @token_required
 def place_order():
-    """
-    USER đặt hàng từ giỏ
-    user_id sẽ lấy từ token
-    """
-    data = request.json or {}
-    data["user_id"] = request.user.get("id")
-
-    return order_controller.place_order(data)
+    return order_controller.place_order()
 
 
 # ---------------------------
@@ -62,3 +55,13 @@ def get_all_orders():
         return jsonify({"message": "Chỉ Admin mới có quyền truy cập"}), 403
 
     return order_controller.get_all_orders()
+# ---------------------------
+# ADMIN: Cập nhật trạng thái đơn hàng
+# ---------------------------
+@order_bp.route("/status/<int:order_id>", methods=["PUT"])
+@token_required
+def update_order_status(order_id):
+    if request.user.get("role") != "admin" :
+        return jsonify({"message": "Chỉ Admin mới có quyền thực hiện"}), 403
+
+    return order_controller.update_order_status(order_id)

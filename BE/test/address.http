@@ -1,9 +1,9 @@
 POST http://127.0.0.1:5000/addresses
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2LCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzA1NTcxNTR9.YdElZSQIgMOOFJafxXdIQ4M_ZU-6dMbZ15Jf38AFZes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzI4NDI3NzF9.uygOxSPo0qLmQdgg-AaJTctdXLCeQQzSAmkRMa7llys
 
 {
-  "receiver_name": "Nguyen Van A",
+  "receiver_name": "Nguyen Van B",
   "phone": "0123456789",
   "address_line": "456 Tran Phu",
   "ward": "Hai Chau 4",
@@ -13,4 +13,4 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2LCJyb
 }
 ### get http://
 GET http://127.0.0.1:5000/addresses
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2LCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzA1NTcxNTR9.YdElZSQIgMOOFJafxXdIQ4M_ZU-6dMbZ15Jf38AFZes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoidXNlciIsImV4cCI6MTc3MjM3ODY1M30.dt1IFjDvfciY5PWBqWiYx99U4hL0sBYyZdrT26ux9OA

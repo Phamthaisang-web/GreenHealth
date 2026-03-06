@@ -22,7 +22,7 @@ class SupplierService:
 
         if not name or not phone or not address:
             raise ValueError("Tên, số điện thoại và địa chỉ không được để trống")
-
+        
         return self.supplier_model.insert_supplier(
             name=name,
             phone=phone,

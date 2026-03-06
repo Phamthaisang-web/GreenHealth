@@ -6,19 +6,21 @@ product_service = ProductService()
 # ---------------------------
 # Lấy danh sách sản phẩm (Có lọc & Phân trang)
 # ---------------------------
-def get_products():
-    filters = {
-        "name": request.args.get("name"),
-        "category_id": request.args.get("category_id", type=int),
-        "min_price": request.args.get("min_price", type=float),
-        "max_price": request.args.get("max_price", type=float),
-    }
 
+def get_products():
+    name = request.args.get("name")
+    category_name = request.args.get("category_name")
+    supplier_name = request.args.get("supplier_name")
+    min_price = request.args.get("min_price", type=float)
+    max_price = request.args.get("max_price", type=float)
     page = request.args.get("page", default=1, type=int)
     page_size = request.args.get("page_size", default=10, type=int)
-
     products = product_service.get_all_products(
-        filters=filters,
+        name=name,
+        category_name=category_name,
+        supplier_name=supplier_name,
+        min_price=min_price,
+        max_price=max_price,
         page=page,
         page_size=page_size
     )
@@ -47,9 +49,13 @@ def create_product():
 
     try:
         product_id = product_service.create_product(data)
+
+        # Lấy lại sản phẩm vừa tạo
+        new_product = product_service.get_product_details(product_id)
+
         return jsonify({
-            "message": "Tạo sản phẩm thành công",
-            "product_id": product_id
+        "message": "Tạo sản phẩm thành công",
+        "data": new_product
         }), 201
 
     except ValueError as e:
@@ -70,7 +76,7 @@ def update_product(product_id):
     if not data:
         return jsonify({"message": "Không có dữ liệu cập nhật"}), 400
 
-    success = product_service.update_product(product_id, **data)
+    success = product_service.update_product(product_id, data)
     if not success:
         return jsonify({"message": "Cập nhật thất bại hoặc sản phẩm không tồn tại"}), 400
 
