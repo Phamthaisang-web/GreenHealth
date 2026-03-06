@@ -49,7 +49,7 @@ export default function VoucherPage() {
   });
 
   const deleteVoucher = useMutation({
-    mutationFn: (id: number) => api.delete(`/voucher/${id}`),
+    mutationFn: (id: number) => api.delete(`/vouchers/${id}`),
 
     onSuccess: () => {
       message.success("Xóa voucher thành công");
@@ -58,7 +58,7 @@ export default function VoucherPage() {
   });
 
   const createVoucher = useMutation({
-    mutationFn: (payload: any) => api.post("/vouchers/", payload),
+    mutationFn: (payload: any) => api.post("/vouchers", payload),
     onSuccess: () => {
       message.success("Thêm voucher thành công");
       queryClient.invalidateQueries({ queryKey: ["vouchers"] });
@@ -68,7 +68,7 @@ export default function VoucherPage() {
   });
 
   const updateVoucher = useMutation({
-    mutationFn: ({ id, payload }: any) => api.put(`/voucher/${id}`, payload),
+    mutationFn: ({ id, payload }: any) => api.put(`/vouchers/${id}`, payload),
 
     onSuccess: () => {
       message.success("Cập nhật voucher thành công");

@@ -107,15 +107,22 @@ class OrderService:
             raise ValueError("Trạng thái không hợp lệ")
 
         order = self.order_model.get_order_details(order_id)
-
+        
         if not order:
             raise ValueError("Đơn hàng không tồn tại")
-
+        current_status = order["status"]
+        
+        if current_status in ["COMPLETED", "CANCELLED"]:
+            raise ValueError("Đơn hàng đã hoàn tất hoặc đã hủy")
         return self.order_model.update_status(order_id, new_status)
 
 
-    # =========================
-    # ADMIN - Lấy toàn bộ đơn hàng
-    # =========================
-    def get_all_orders(self):
-        return self.order_model.get_all_orders()
+    def get_all_orders(self, status=None, user_id=None, date_from=None, date_to=None, order_code=None):
+
+        return self.order_model.get_all_orders(
+            status=status,
+            user_id=user_id,
+            date_from=date_from,
+            date_to=date_to,
+            order_code=order_code
+        )

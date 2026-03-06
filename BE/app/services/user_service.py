@@ -84,16 +84,9 @@ class UserService:
             "status": user["status"]
         }
 
-
-    # ---------------------------
-    # Lấy danh sách user
-    # ---------------------------
     def get_users(self):
         return self.user_model.get_all_users()
 
-    # ---------------------------
-    # Lấy user theo ID
-    # ---------------------------
     def get_user_by_id(self, user_id):
         if not user_id:
             return {"error": "Thiếu user_id"}
@@ -105,9 +98,6 @@ class UserService:
         user.pop("password", None)
         return user
 
-    # ---------------------------
-    # Cập nhật user
-    # ---------------------------
     def update_user_info(self, user_id, **kwargs):
 
         user = self.user_model.get_user_by_id(user_id)
@@ -125,18 +115,18 @@ class UserService:
         if not update_data:
             return {"error": "Không có dữ liệu hợp lệ để cập nhật"}
 
-        # Password
+    
         if "password" in update_data:
             if len(update_data["password"]) < 6:
                 return {"error": "Mật khẩu phải >= 6 ký tự"}
             update_data["password"] = generate_password_hash(update_data["password"])
 
-        # Email
+     
         if "email" in update_data:
             if not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", update_data["email"]):
                 return {"error": "Email không hợp lệ"}
 
-        # Status
+       
         if "status" in update_data:
             if update_data["status"] not in ["active", "blocked"]:
                 return {"error": "Status không hợp lệ"}
@@ -147,9 +137,7 @@ class UserService:
 
         return {"message": "Cập nhật user thành công"}
 
-    # ---------------------------
-    # Xóa user (soft delete)
-    # ---------------------------
+   
     def delete_user(self, user_id):
 
         user = self.user_model.get_user_by_id(user_id)
@@ -162,9 +150,7 @@ class UserService:
         self.user_model.update_user(user_id, status="blocked")
         return {"message": "User đã bị khóa"}
 
-    # ---------------------------
-    # Đổi mật khẩu
-    # ---------------------------
+    
     def change_user_password(self, user_id, old_password, new_password):
 
         user = self.user_model.get_user_by_id(user_id)

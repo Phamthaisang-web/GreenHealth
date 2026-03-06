@@ -285,10 +285,18 @@ class OrderModel:
 
         return success
 
+   
+        # ==========================================
+    # ADMIN - LẤY TẤT CẢ ĐƠN HÀNG + FILTER
     # ==========================================
-    # ADMIN - LẤY TẤT CẢ ĐƠN HÀNG
-    # ==========================================
-    def get_all_orders(self):
+    def get_all_orders(
+        self,
+        status=None,
+        user_id=None,
+        date_from=None,
+        date_to=None,
+        order_code=None
+    ):
 
         conn = self.get_connection()
         cursor = conn.cursor(dictionary=True)
@@ -324,10 +332,46 @@ class OrderModel:
             LEFT JOIN Address a
             ON o.address_id = a.id
 
-            ORDER BY o.created_at DESC
+            WHERE 1=1
         """
 
-        cursor.execute(sql)
+        params = []
+
+        # ========================
+        # FILTER STATUS
+        # ========================
+        if status:
+            sql += " AND o.status = %s"
+            params.append(status)
+
+        # ========================
+        # FILTER USER
+        # ========================
+        if user_id:
+            sql += " AND o.user_id = %s"
+            params.append(user_id)
+
+        # ========================
+        # FILTER ORDER CODE
+        # ========================
+        if order_code:
+            sql += " AND o.order_code LIKE %s"
+            params.append(f"%{order_code}%")
+
+        # ========================
+        # FILTER DATE
+        # ========================
+        if date_from:
+            sql += " AND o.created_at >= %s"
+            params.append(date_from)
+
+        if date_to:
+            sql += " AND o.created_at <= %s"
+            params.append(date_to)
+
+        sql += " ORDER BY o.created_at DESC"
+
+        cursor.execute(sql, params)
 
         orders = cursor.fetchall()
 

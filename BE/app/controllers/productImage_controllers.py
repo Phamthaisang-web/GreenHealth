@@ -4,9 +4,6 @@ from app.services.productImage_service import ProductImageService
 product_image_service = ProductImageService()
 
 
-# =============================
-# Lấy tất cả ảnh theo product
-# =============================
 def get_product_images(product_id):
     try:
         images = product_image_service.get_images_by_product(product_id)
@@ -15,9 +12,7 @@ def get_product_images(product_id):
         return jsonify({"message": str(e)}), 400
 
 
-# =============================
-# Lấy ảnh chính
-# =============================
+
 def get_main_image(product_id):
     try:
         image = product_image_service.get_main_image(product_id)
@@ -29,9 +24,7 @@ def get_main_image(product_id):
         return jsonify({"message": str(e)}), 400
 
 
-# =============================
-# Thêm ảnh cho product
-# =============================
+
 def add_product_image():
     data = request.json
     if not data:
@@ -47,9 +40,7 @@ def add_product_image():
         return jsonify({"message": str(e)}), 400
 
 
-# =============================
-# Cập nhật ảnh
-# =============================
+
 def update_product_image(image_id):
     data = request.json
     if not data:
@@ -62,9 +53,7 @@ def update_product_image(image_id):
         return jsonify({"message": str(e)}), 400
 
 
-# =============================
-# Xóa ảnh
-# =============================
+
 def delete_product_image(image_id):
     try:
         product_image_service.delete_product_image(image_id)

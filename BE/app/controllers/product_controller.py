@@ -28,9 +28,7 @@ def get_products():
     return jsonify(products), 200
 
 
-# ---------------------------
-# Lấy chi tiết sản phẩm
-# ---------------------------
+# 
 def get_product_id(product_id):
     product = product_service.get_product_details(product_id)
     if not product:
@@ -39,9 +37,7 @@ def get_product_id(product_id):
     return jsonify(product), 200
 
 
-# ---------------------------
-# Tạo sản phẩm mới
-# ---------------------------
+
 def create_product():
     data = request.json
     if not data:

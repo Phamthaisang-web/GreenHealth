@@ -110,6 +110,18 @@ def update_order_status(order_id):
    
 def get_all_orders():
 
-    orders = order_service.get_all_orders()
+    status = request.args.get("status")
+    user_id = request.args.get("user_id")
+    date_from = request.args.get("date_from")
+    date_to = request.args.get("date_to")
+    order_code = request.args.get("order_code")
+
+    orders = order_service.get_all_orders(
+        status=status,
+        user_id=user_id,
+        date_from=date_from,
+        date_to=date_to,
+        order_code=order_code
+    )
 
     return jsonify(orders), 200

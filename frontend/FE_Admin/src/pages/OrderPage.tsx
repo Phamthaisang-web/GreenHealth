@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../services/api";
-import { Table, Tag, Modal, Button, Select, message } from "antd";
+import { Table, Tag, Modal, Button, Select, message, Input } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 interface Order {
@@ -37,11 +37,16 @@ export default function OrdersPage() {
 
   const [openDetail, setOpenDetail] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
-
+  const [filters, setFilters] = useState({
+    status: "",
+    order_code: "",
+  });
   const { data: orders = [], isLoading } = useQuery<Order[]>({
-    queryKey: ["orders"],
+    queryKey: ["orders", filters],
     queryFn: async () => {
-      const res = await api.get("/orders/");
+      const res = await api.get("/orders/", {
+        params: filters,
+      });
       return res.data;
     },
   });
@@ -175,45 +180,89 @@ export default function OrdersPage() {
   return (
     <div>
       <h2>Danh sách đơn hàng</h2>
+      <div style={{ marginBottom: 20, display: "flex", gap: 10 }}>
+        <Input
+          placeholder="Tìm mã đơn"
+          style={{ width: 200 }}
+          value={filters.order_code}
+          onChange={(e) =>
+            setFilters({
+              ...filters,
+              order_code: e.target.value,
+            })
+          }
+        />
 
-      <Table
-        columns={columns}
-        dataSource={orders}
-        rowKey="id"
-        loading={isLoading}
-      />
+        <Select
+          placeholder="Trạng thái"
+          style={{ width: 160 }}
+          allowClear
+          value={filters.status || undefined}
+          onChange={(value) =>
+            setFilters({
+              ...filters,
+              status: value || "",
+            })
+          }
+          options={[
+            { value: "PENDING", label: "PENDING" },
+            { value: "SHIPPING", label: "SHIPPING" },
+            { value: "COMPLETED", label: "COMPLETED" },
+            { value: "CANCELLED", label: "CANCELLED" },
+          ]}
+        />
 
-      <Modal
-        title="Chi tiết đơn hàng"
-        open={openDetail}
-        footer={null}
-        width={700}
-        onCancel={() => setOpenDetail(false)}
-      >
-        {selectedOrder && (
-          <>
-            <p>
-              <b>Mã đơn:</b> {selectedOrder.order_code}
-            </p>
+        <Button
+          onClick={() =>
+            setFilters({
+              status: "",
+              order_code: "",
+            })
+          }
+        >
+          Reset
+        </Button>
+      </div>
+      <div>
+        <Table
+          columns={columns}
+          dataSource={orders}
+          rowKey="id"
+          loading={isLoading}
+        />
 
-            <p>
-              <b>Khách hàng:</b> {selectedOrder.user_name}
-            </p>
+        <Modal
+          title="Chi tiết đơn hàng"
+          open={openDetail}
+          footer={null}
+          width={700}
+          onCancel={() => setOpenDetail(false)}
+        >
+          {selectedOrder && (
+            <>
+              <p>
+                <b>Mã đơn:</b> {selectedOrder.order_code}
+              </p>
 
-            <p>
-              <b>Tổng tiền:</b>{" "}
-              {Number(selectedOrder.total_amount).toLocaleString()} đ
-            </p>
+              <p>
+                <b>Khách hàng:</b> {selectedOrder.user_name}
+              </p>
 
-            <Table
-              columns={itemColumns}
-              dataSource={selectedOrder.items}
-              pagination={false}
-              rowKey="id"
-            />
-          </>
-        )}
-      </Modal>
+              <p>
+                <b>Tổng tiền:</b>{" "}
+                {Number(selectedOrder.total_amount).toLocaleString()} đ
+              </p>
+
+              <Table
+                columns={itemColumns}
+                dataSource={selectedOrder.items}
+                pagination={false}
+                rowKey="id"
+              />
+            </>
+          )}
+        </Modal>
+      </div>
     </div>
   );
 }

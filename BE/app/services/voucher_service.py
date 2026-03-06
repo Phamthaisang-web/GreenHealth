@@ -10,7 +10,6 @@ class VoucherService:
     # Danh sách voucher
     # ========================
     def get_all_vouchers(self):
-
         return self.voucher_module.get_all()
 
     # ========================
@@ -38,12 +37,22 @@ class VoucherService:
     # Tạo voucher
     # ========================
     def create_voucher(self, data):
-
         return self.voucher_module.create(data)
+
+    # ========================
+    # Cập nhật voucher
+    # ========================
+    def update_voucher(self, voucher_id, data):
+        return self.voucher_module.update(voucher_id, data)
+
+    # ========================
+    # Xóa voucher
+    # ========================
+    def delete_voucher(self, voucher_id):
+        return self.voucher_module.delete(voucher_id)
 
     # ========================
     # Sử dụng voucher
     # ========================
     def use_voucher(self, voucher_id):
-
         self.voucher_module.decrease_quantity(voucher_id)

@@ -25,6 +25,10 @@ class VoucherController:
                 "error": str(e)
             }), 500
 
+
+    # ========================
+    # Tạo voucher
+    # ========================
     def create(self):
 
         try:
@@ -54,6 +58,47 @@ class VoucherController:
                 "message": "Lỗi hệ thống",
                 "error": str(e)
             }), 500
+
+
+    # ========================
+    # Cập nhật voucher
+    # ========================
+    def update(self, voucher_id):
+
+        try:
+            data = request.get_json()
+
+            result = self.voucher_service.update_voucher(voucher_id, data)
+
+            return jsonify({
+                "message": "Cập nhật voucher thành công"
+            }), 200
+
+        except Exception as e:
+            return jsonify({
+                "message": "Lỗi hệ thống",
+                "error": str(e)
+            }), 500
+
+
+    # ========================
+    # Xóa voucher
+    # ========================
+    def delete(self, voucher_id):
+
+        try:
+            self.voucher_service.delete_voucher(voucher_id)
+
+            return jsonify({
+                "message": "Xóa voucher thành công"
+            }), 200
+
+        except Exception as e:
+            return jsonify({
+                "message": "Lỗi hệ thống",
+                "error": str(e)
+            }), 500
+
 
     # ========================
     # Check voucher

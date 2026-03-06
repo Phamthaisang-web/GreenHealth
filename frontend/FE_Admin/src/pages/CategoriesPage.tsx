@@ -27,7 +27,6 @@ interface Category {
 
 export default function CategoriesPage() {
   const queryClient = useQueryClient();
-
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
   const [uploadedImage, setUploadedImage] = useState<UploadFile[]>([]);
