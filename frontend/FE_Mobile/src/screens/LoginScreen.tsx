@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
 
   header: { marginBottom: 30 },
   title: {
-    fontSize: 26,
+    fontSize: 20,
     fontWeight: "700",
     color: "#000",
     letterSpacing: -0.5,

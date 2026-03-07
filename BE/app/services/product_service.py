@@ -54,25 +54,26 @@ class ProductService:
        
 
     def get_all_products(
-        self,
-        name=None,
-        category_name=None,
-        supplier_name=None,
-        min_price=None,
-        max_price=None,
-        page=1,
-        page_size=10
+    self,
+    name=None,
+    category_name=None,
+    supplier_name=None,
+    min_price=None,
+    max_price=None,
+    sort=None,
+    page=1,
+    page_size=10
     ):
         return self.product_model.select_all_products(
-            name=name,
-            category_name=category_name,
-            supplier_name=supplier_name,
-            min_price=min_price,
-            max_price=max_price,
-            page=page,
-            page_size=page_size
-        )
-
+        name=name,
+        category_name=category_name,
+        supplier_name=supplier_name,
+        min_price=min_price,
+        max_price=max_price,
+        sort=sort,
+        page=page,
+        page_size=page_size
+    )
     # tìm kiếm bằng id
     def get_product_details(self, product_id):
         product = self.product_model.get_product_by_id(product_id)
@@ -117,3 +118,4 @@ class ProductService:
         if expiry < date.today():
             return "Expired"
         return "Valid"
+    

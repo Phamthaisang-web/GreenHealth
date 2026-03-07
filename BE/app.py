@@ -11,6 +11,7 @@ from app.routes.otp_route import otp_bp
 from app.routes.upload_route import upload_bp
 from app.routes.voucher_route import voucher_bp
 from app.routes.dashboard_routes import dashboard_bp
+from app.routes.ai_routes import ai_bp
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
@@ -24,6 +25,7 @@ app.register_blueprint(order_bp)
 app.register_blueprint(otp_bp)
 app.register_blueprint(voucher_bp)
 app.register_blueprint(dashboard_bp)
+app.register_blueprint(ai_bp)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["MAX_CONTENT_LENGTH"] = MAX_CONTENT_LENGTH
 app.register_blueprint(upload_bp)

@@ -1,0 +1,6 @@
+POST http://localhost:5000/ai/ask
+Content-Type: application/json
+
+{
+  "question": "sản phẩm rẻ nhất"
+}

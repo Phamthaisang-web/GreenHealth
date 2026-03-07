@@ -46,9 +46,8 @@ export default function AddAddressScreen() {
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
   const [wards, setWards] = useState<Ward[]>([]);
-
-  const [provinceCode, setProvinceCode] = useState(null);
-  const [districtCode, setDistrictCode] = useState(null);
+  const [provinceCode, setProvinceCode] = useState<number | null>(null);
+  const [districtCode, setDistrictCode] = useState<number | null>(null);
 
   useEffect(() => {
     fetch("https://provinces.open-api.vn/api/p/")
@@ -148,9 +147,13 @@ export default function AddAddressScreen() {
               style={{ flex: 1 }}
               selectedValue={provinceCode}
               onValueChange={(value) => {
+                if (value === null) return;
+
                 setProvinceCode(value);
                 const province = provinces.find((p) => p.code === value);
-                setForm({ ...form, city: province?.name });
+
+                setForm({ ...form, city: province?.name || "" });
+
                 loadDistricts(value);
               }}
             >
@@ -170,9 +173,13 @@ export default function AddAddressScreen() {
               style={{ flex: 1 }}
               selectedValue={districtCode}
               onValueChange={(value) => {
+                if (value === null) return;
+
                 setDistrictCode(value);
                 const district = districts.find((d) => d.code === value);
-                setForm({ ...form, district: district?.name });
+
+                setForm({ ...form, district: district?.name || "" });
+
                 loadWards(value);
               }}
             >
