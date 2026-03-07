@@ -10,10 +10,12 @@ import {
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { getCart, removeFromCart, updateQuantity } from "../utils/cart";
+import { useNavigation } from "@react-navigation/native";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
 
 export default function CartScreen() {
+  const navigation = useNavigation<any>();
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -32,9 +34,19 @@ export default function CartScreen() {
           const res = await fetch(`${BASE_URL}/products/${item.productId}`);
           const product = await res.json();
 
+          const imgRes = await fetch(
+            `${BASE_URL}/product-images/product/${item.productId}`,
+          );
+          const images = await imgRes.json();
+
+          const mainImage = images.find((img: any) => img.is_main === 1);
+
           return {
             ...product,
             quantity: item.quantity,
+            image_url: mainImage
+              ? `${BASE_URL}${encodeURI(mainImage.image_url)}`
+              : null,
           };
         }),
       );
@@ -52,12 +64,10 @@ export default function CartScreen() {
       return;
     }
 
-    // ✅ Update UI ngay
     setItems((prev) =>
       prev.map((item) => (item.id === id ? { ...item, quantity: qty } : item)),
     );
 
-    // ✅ Lưu vào AsyncStorage
     await updateQuantity(id, qty);
   };
   const removeItem = async (id: number) => {
@@ -100,6 +110,7 @@ export default function CartScreen() {
 
             <View style={{ flex: 1 }}>
               <Text style={styles.name}>{item.name}</Text>
+
               <Text style={styles.price}>
                 {Number(item.price).toLocaleString()} đ
               </Text>
@@ -135,6 +146,17 @@ export default function CartScreen() {
       <View style={styles.footer}>
         <Text style={styles.totalText}>Tổng cộng</Text>
         <Text style={styles.totalPrice}>{total.toLocaleString()} đ</Text>
+      </View>
+      <View style={styles.footer}>
+        <Text style={styles.totalText}>Tổng cộng</Text>
+        <Text style={styles.totalPrice}>{total.toLocaleString()} đ</Text>
+
+        <TouchableOpacity
+          style={styles.checkoutBtn}
+          onPress={() => navigation.navigate("Payment")}
+        >
+          <Text style={styles.checkoutText}>Thanh toán</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -207,5 +229,18 @@ const styles = StyleSheet.create({
   emptyText: {
     marginTop: 12,
     color: "#888",
+  },
+  checkoutBtn: {
+    marginTop: 10,
+    backgroundColor: "#0ea91d",
+    padding: 14,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+
+  checkoutText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });

@@ -67,22 +67,16 @@ class OrderService:
         return self.order_model.get_user_orders(user_id)
 
 
-    # =========================
-    # Chi tiết đơn hàng
-    # =========================
+    
     def get_order_detail(self, order_id):
-
+        
         order = self.order_model.get_order_details(order_id)
-
         if not order:
             return None
-
         return order
 
 
-    # =========================
-    # Hủy đơn
-    # =========================
+    
     def cancel_order(self, order_id):
 
         order = self.order_model.get_order_details(order_id)

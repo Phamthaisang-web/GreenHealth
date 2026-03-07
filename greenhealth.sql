@@ -1,4 +1,4 @@
-drop database greenhealth;
+d
 CREATE DATABASE greenhealth;
 USE greenhealth;
 CREATE TABLE email_otp (

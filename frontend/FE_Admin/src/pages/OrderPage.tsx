@@ -4,6 +4,7 @@ import api from "../services/api";
 import { Table, Tag, Modal, Button, Select, message, Input } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
+
 interface Order {
   id: number;
   order_code: string;
@@ -23,10 +24,11 @@ interface Order {
   status: string;
   created_at: string;
 }
+
 interface OrderItem {
   id: number;
   product_id: number;
-  name: string;
+  product_name: string;
   quantity: number;
   price: string;
   subtotal: string;
@@ -37,10 +39,12 @@ export default function OrdersPage() {
 
   const [openDetail, setOpenDetail] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
+
   const [filters, setFilters] = useState({
     status: "",
     order_code: "",
   });
+
   const { data: orders = [], isLoading } = useQuery<Order[]>({
     queryKey: ["orders", filters],
     queryFn: async () => {
@@ -127,7 +131,6 @@ export default function OrdersPage() {
             type="link"
             onClick={async () => {
               const data = await getOrderDetail(record.id);
-
               setSelectedOrder(data);
               setOpenDetail(true);
             }}
@@ -159,7 +162,7 @@ export default function OrdersPage() {
   const itemColumns: ColumnsType<OrderItem> = [
     {
       title: "Tên sản phẩm",
-      dataIndex: "name",
+      dataIndex: "product_name",
     },
     {
       title: "Số lượng",
@@ -180,6 +183,7 @@ export default function OrdersPage() {
   return (
     <div>
       <h2>Danh sách đơn hàng</h2>
+
       <div style={{ marginBottom: 20, display: "flex", gap: 10 }}>
         <Input
           placeholder="Tìm mã đơn"
@@ -223,25 +227,35 @@ export default function OrdersPage() {
           Reset
         </Button>
       </div>
-      <div>
-        <Table
-          columns={columns}
-          dataSource={orders}
-          rowKey="id"
-          loading={isLoading}
-        />
 
-        <Modal
-          title="Chi tiết đơn hàng"
-          open={openDetail}
-          footer={null}
-          width={700}
-          onCancel={() => setOpenDetail(false)}
-        >
-          {selectedOrder && (
-            <>
+      <Table
+        columns={columns}
+        dataSource={orders}
+        rowKey="id"
+        loading={isLoading}
+      />
+
+      <Modal
+        title="Chi tiết đơn hàng"
+        open={openDetail}
+        footer={null}
+        width={900}
+        onCancel={() => setOpenDetail(false)}
+      >
+        {selectedOrder && (
+          <>
+            <div style={{ marginBottom: 20 }}>
               <p>
                 <b>Mã đơn:</b> {selectedOrder.order_code}
+              </p>
+
+              <p>
+                <b>Trạng thái:</b> {renderStatus(selectedOrder.status)}
+              </p>
+
+              <p>
+                <b>Ngày tạo:</b>{" "}
+                {dayjs(selectedOrder.created_at).format("HH:mm DD/MM/YYYY")}
               </p>
 
               <p>
@@ -249,20 +263,46 @@ export default function OrdersPage() {
               </p>
 
               <p>
-                <b>Tổng tiền:</b>{" "}
-                {Number(selectedOrder.total_amount).toLocaleString()} đ
+                <b>SĐT:</b> {selectedOrder.user_phone}
               </p>
 
-              <Table
-                columns={itemColumns}
-                dataSource={selectedOrder.items}
-                pagination={false}
-                rowKey="id"
-              />
-            </>
-          )}
-        </Modal>
-      </div>
+              <p>
+                <b>Địa chỉ:</b> {selectedOrder.full_address}
+              </p>
+
+              <p>
+                <b>Voucher:</b> {selectedOrder.voucher_code || "Không"}
+              </p>
+
+              <p>
+                <b>Tổng trước giảm:</b>{" "}
+                {Number(selectedOrder.total_amount_before).toLocaleString()} đ
+              </p>
+
+              <p>
+                <b>Giảm giá:</b>{" "}
+                {Number(selectedOrder.discount_amount).toLocaleString()} đ
+              </p>
+
+              <p>
+                <b>Tổng thanh toán:</b>{" "}
+                <span style={{ color: "red", fontWeight: 600 }}>
+                  {Number(selectedOrder.total_amount).toLocaleString()} đ
+                </span>
+              </p>
+            </div>
+
+            <h3>Sản phẩm</h3>
+
+            <Table
+              columns={itemColumns}
+              dataSource={selectedOrder.items}
+              pagination={false}
+              rowKey="id"
+            />
+          </>
+        )}
+      </Modal>
     </div>
   );
 }

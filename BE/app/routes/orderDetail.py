@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.controllers import order_detail_controller
+from app.controllers.order_controller import get_order_detail
 from app.utils.auth_middleware import token_required
 
 order_detail_bp = Blueprint("order_detail", __name__, url_prefix="/order-details")
@@ -12,7 +12,7 @@ order_detail_bp = Blueprint("order_detail", __name__, url_prefix="/order-details
 @token_required
 def get_order_details(order_id):
     # Có thể thêm check order thuộc user nếu bạn muốn secure hơn
-    return order_detail_controller.get_order_details(order_id)
+    return get_order_detail.get_order_details(order_id)
 
 
 # ---------------------------

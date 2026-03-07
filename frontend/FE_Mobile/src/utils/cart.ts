@@ -47,3 +47,7 @@ export async function updateQuantity(productId: number, quantity: number) {
 
   await AsyncStorage.setItem(CART_KEY, JSON.stringify(cart));
 }
+
+export const clearCart = async () => {
+  await AsyncStorage.removeItem(CART_KEY);
+};

@@ -18,7 +18,6 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzI4NDI3NzF9.uygOxSPo0qLmQdgg-AaJTctdXLCeQQzSAmkRMa7llys
 
 ###
-
 PUT http://127.0.0.1:5000/orders/status/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzI2MjkxMDB9.fO0XMlUGXZzm-uq7HZOe6ADiYFrKCwrSCzqjc8qgZyI
@@ -26,3 +25,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJyb
 {
     "status": "COMPLETED"
 }
+### laayd dodnw hang cuar minh
+GET http://127.0.0.1:5000/orders/my-orders
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzI5NDA0MDZ9.-FiB1QWgAIEgPJvg2IZ2G7o3IF8roElEzSYqlmW1ZEs
+### laays chi tiet don hang
+GET http://127.0.0.1:5000/orders/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzI5NDA0MDZ9.-FiB1QWgAIEgPJvg2IZ2G7o3IF8roElEzSYqlmW1ZEs
+
+### huyr ddon hang cua
+PUT http://127.0.0.1:5000/orders/3/cancel
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzI5NDA0MDZ9.-FiB1QWgAIEgPJvg2IZ2G7o3IF8roElEzSYqlmW1ZEs

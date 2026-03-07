@@ -4,9 +4,7 @@ from app.services.order_service import OrderService
 order_service = OrderService()
 
 
-# ---------------------------
-# PLACE ORDER
-# ---------------------------
+
 def place_order():
     user_id = request.user["user_id"]
     
@@ -37,9 +35,7 @@ def place_order():
         }), 500
 
 
-# ---------------------------
-# GET ORDER HISTORY
-# ---------------------------
+
 def get_order_history(user_id):
     if not user_id:
         return jsonify({"message": "Thiếu user_id"}), 400
@@ -48,31 +44,23 @@ def get_order_history(user_id):
     return jsonify(orders), 200
 
 
-# ---------------------------
-# GET ORDER DETAIL
-# ---------------------------
-def get_order_detail(order_id, user):
+def get_order_detail(order_id):
     order = order_service.get_order_detail(order_id)
 
     if not order:
         return jsonify({"message": "Đơn hàng không tồn tại"}), 404
 
-    # Optional: check quyền
-    if user.get("role") != "admin" and order["user_id"] != user.get("id"):
-        return jsonify({"message": "Không có quyền truy cập"}), 403
-
+  
     return jsonify(order), 200
 
-# ---------------------------
-# CANCEL ORDER
-# ---------------------------
+
 def cancel_order(order_id, user):
     order = order_service.get_order_detail(order_id)
 
     if not order:
         return jsonify({"message": "Đơn hàng không tồn tại"}), 404
 
-    if order["user_id"] != user.get("id"):
+    if order["user_id"] != user.get("user_id"):
         return jsonify({"message": "Bạn không thể hủy đơn này"}), 403
 
     try:

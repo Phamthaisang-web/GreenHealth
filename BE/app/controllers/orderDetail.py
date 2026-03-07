@@ -1,12 +1,10 @@
 from flask import request, jsonify
-from app.services.order_detail_service import OrderDetailService
+from app.services.orderDetail_service import OrderDetailService
 
 order_detail_service = OrderDetailService()
 
 
-# ---------------------------
-# GET ALL / FILTER BY ORDER
-# ---------------------------
+
 def get_order_details():
     order_id = request.args.get("order_id", type=int)
 
@@ -18,9 +16,7 @@ def get_order_details():
     return jsonify(data), 200
 
 
-# ---------------------------
-# GET ONE
-# ---------------------------
+
 def get_order_detail(detail_id):
     detail = order_detail_service.get_by_id(detail_id)
     if detail:
@@ -28,9 +24,7 @@ def get_order_detail(detail_id):
     return jsonify({"message": "Order detail không tồn tại"}), 404
 
 
-# ---------------------------
-# CREATE
-# ---------------------------
+
 def create_order_detail():
     data = request.json
 
@@ -47,9 +41,7 @@ def create_order_detail():
         return jsonify({"message": "Lỗi hệ thống", "error": str(e)}), 500
 
 
-# ---------------------------
-# UPDATE
-# ---------------------------
+
 def update_order_detail(detail_id):
     data = request.json
     if not data:
@@ -62,9 +54,7 @@ def update_order_detail(detail_id):
     return jsonify({"message": "Cập nhật thất bại"}), 400
 
 
-# ---------------------------
-# DELETE
-# ---------------------------
+
 def delete_order_detail(detail_id):
     success = order_detail_service.delete(detail_id)
 

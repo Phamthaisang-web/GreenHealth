@@ -7,13 +7,15 @@ import {
   ActivityIndicator,
   ScrollView,
   Alert,
+  Pressable,
 } from "react-native";
 
 import BuyButton from "../components/BuyButton";
 import { addToCart } from "../utils/cart";
-import { Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import ProductCard from "../components/ProductCard";
+
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
 
 export default function ProductDetailScreen({ route }: any) {
@@ -23,9 +25,12 @@ export default function ProductDetailScreen({ route }: any) {
   const [category, setCategory] = useState<any>(null);
   const [supplier, setSupplier] = useState<any>(null);
   const [images, setImages] = useState<any[]>([]);
+  const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+
   const navigation = useNavigation<any>();
+
   useEffect(() => {
     fetchAll();
   }, [productId]);
@@ -34,11 +39,23 @@ export default function ProductDetailScreen({ route }: any) {
     try {
       setLoading(true);
 
+      /* ======================
+         PRODUCT
+      ====================== */
+
       const productRes = await fetch(`${BASE_URL}/products/${productId}`);
       const productData = await productRes.json();
+
+      setProduct(productData);
+
+      /* ======================
+         PRODUCT IMAGES
+      ====================== */
+
       const imgRes = await fetch(
         `${BASE_URL}/product-images/product/${productId}`,
       );
+
       const imagesData = await imgRes.json();
 
       const mappedImages = imagesData.map((img: any) => ({
@@ -49,19 +66,65 @@ export default function ProductDetailScreen({ route }: any) {
       setImages(mappedImages);
       setCurrentIndex(0);
 
+      /* ======================
+         CATEGORY
+      ====================== */
+
       const categoryRes = await fetch(
         `${BASE_URL}/categories/${productData.category_id}`,
       );
+
       const categoryData = await categoryRes.json();
+      setCategory(categoryData);
+
+      /* ======================
+         SUPPLIER
+      ====================== */
 
       const supplierRes = await fetch(
         `${BASE_URL}/suppliers/${productData.supplier_id}`,
       );
-      const supplierData = await supplierRes.json();
 
-      setProduct(productData);
-      setCategory(categoryData);
+      const supplierData = await supplierRes.json();
       setSupplier(supplierData);
+
+      /* ======================
+         RELATED PRODUCTS
+      ====================== */
+
+      const relatedRes = await fetch(
+        `${BASE_URL}/products?category_id=${productData.category_id}`,
+      );
+
+      const relatedData = await relatedRes.json();
+
+      const filtered = relatedData.filter((p: any) => p.id !== productId);
+
+      const relatedWithImages = await Promise.all(
+        filtered.slice(0, 6).map(async (p: any) => {
+          try {
+            const imgRes = await fetch(
+              `${BASE_URL}/product-images/product/${p.id}`,
+            );
+
+            const imgData = await imgRes.json();
+
+            return {
+              ...p,
+              image_url: imgData?.[0]?.image_url
+                ? `${BASE_URL}${encodeURI(imgData[0].image_url)}`
+                : "https://via.placeholder.com/200x200.png",
+            };
+          } catch {
+            return {
+              ...p,
+              image_url: "https://via.placeholder.com/200x200.png",
+            };
+          }
+        }),
+      );
+
+      setRelatedProducts(relatedWithImages);
     } catch (error) {
       console.log("❌ Lỗi lấy chi tiết sản phẩm:", error);
     } finally {
@@ -88,6 +151,7 @@ export default function ProductDetailScreen({ route }: any) {
       Alert.alert("❌ Lỗi", "Không thể thêm vào giỏ hàng");
     }
   };
+
   if (loading) {
     return <ActivityIndicator size="large" style={{ marginTop: 40 }} />;
   }
@@ -99,53 +163,21 @@ export default function ProductDetailScreen({ route }: any) {
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* 🖼 Ảnh lớn */}
+        {/* IMAGE */}
         <View style={styles.imageWrapper}>
           <Image
             source={{
               uri:
                 images[currentIndex]?.full_url ??
-                "https://via.placeholder.com/600x600.png?text=No+Image",
+                "https://via.placeholder.com/600x600.png",
             }}
             style={styles.image}
           />
-
-          {/* ◀ */}
-          {images.length > 1 && (
-            <Text
-              style={[styles.navBtn, { left: 10 }]}
-              onPress={() =>
-                setCurrentIndex((prev) =>
-                  prev === 0 ? images.length - 1 : prev - 1,
-                )
-              }
-            >
-              ‹
-            </Text>
-          )}
-
-          {/* ▶ */}
-          {images.length > 1 && (
-            <Text
-              style={[styles.navBtn, { right: 10 }]}
-              onPress={() =>
-                setCurrentIndex((prev) =>
-                  prev === images.length - 1 ? 0 : prev + 1,
-                )
-              }
-            >
-              ›
-            </Text>
-          )}
         </View>
 
-        {/* 🖼 Thumbnails */}
+        {/* THUMBNAIL */}
         {images.length > 1 && (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.thumbContainer}
-          >
+          <ScrollView horizontal style={styles.thumbContainer}>
             {images.map((img, index) => (
               <Pressable key={img.id} onPress={() => setCurrentIndex(index)}>
                 <Image
@@ -160,7 +192,7 @@ export default function ProductDetailScreen({ route }: any) {
           </ScrollView>
         )}
 
-        {/* 📦 Thông tin */}
+        {/* PRODUCT INFO */}
         <View style={styles.card}>
           <Text style={styles.name}>{product.name}</Text>
 
@@ -173,8 +205,6 @@ export default function ProductDetailScreen({ route }: any) {
           <InfoRow label="Danh mục" value={category?.name} />
           <InfoRow label="Xuất xứ" value={product.origin} />
           <InfoRow label="Nhà cung cấp" value={supplier?.name} />
-          <InfoRow label="NSX" value={formatDate(product.manufacture_date)} />
-          <InfoRow label="HSD" value={formatDate(product.expiry_date)} />
 
           <View style={styles.divider} />
 
@@ -183,6 +213,19 @@ export default function ProductDetailScreen({ route }: any) {
             {product.description || "Chưa có mô tả sản phẩm"}
           </Text>
         </View>
+
+        {/* RELATED PRODUCTS */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingRight: 10 }}
+        >
+          {relatedProducts.map((item) => (
+            <View key={item.id} style={{ width: 160, marginRight: 12 }}>
+              <ProductCard product={item} />
+            </View>
+          ))}
+        </ScrollView>
       </ScrollView>
 
       <BuyButton onPress={handleBuy} />
@@ -190,7 +233,7 @@ export default function ProductDetailScreen({ route }: any) {
   );
 }
 
-/* ===== COMPONENT PHỤ ===== */
+/* COMPONENT */
 
 function InfoRow({ label, value }: { label: string; value?: string }) {
   return (
@@ -201,12 +244,7 @@ function InfoRow({ label, value }: { label: string; value?: string }) {
   );
 }
 
-function formatDate(dateStr?: string) {
-  if (!dateStr) return "--";
-  return new Date(dateStr).toLocaleDateString("vi-VN");
-}
-
-/* ===== STYLE ===== */
+/* STYLE */
 
 const styles = StyleSheet.create({
   container: {
@@ -221,24 +259,11 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     aspectRatio: 1,
-    backgroundColor: "#eee",
-  },
-
-  navBtn: {
-    position: "absolute",
-    top: "45%",
-    fontSize: 40,
-    color: "#fff",
-    backgroundColor: "rgba(0,0,0,0.4)",
-    paddingHorizontal: 12,
-    borderRadius: 20,
-    overflow: "hidden",
   },
 
   thumbContainer: {
     paddingVertical: 10,
     paddingHorizontal: 8,
-    backgroundColor: "#fff",
   },
 
   thumb: {
@@ -246,8 +271,6 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 8,
     marginRight: 8,
-    borderWidth: 1,
-    borderColor: "#eee",
   },
 
   thumbActive: {
@@ -266,14 +289,13 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 22,
     fontWeight: "700",
-    marginBottom: 8,
   },
 
   price: {
     fontSize: 20,
     color: "#0ea91d",
     fontWeight: "700",
-    marginBottom: 12,
+    marginVertical: 10,
   },
 
   divider: {
@@ -285,28 +307,55 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 6,
   },
 
   label: {
-    fontSize: 14,
     color: "#777",
   },
 
   value: {
-    fontSize: 14,
     fontWeight: "600",
   },
 
   descTitle: {
-    fontSize: 16,
     fontWeight: "600",
     marginBottom: 6,
   },
 
   desc: {
-    fontSize: 14,
     color: "#444",
-    lineHeight: 20,
+  },
+
+  relatedSection: {
+    marginTop: 20,
+    paddingHorizontal: 16,
+    paddingBottom: 100,
+  },
+
+  relatedTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 10,
+  },
+
+  relatedCard: {
+    width: 140,
+    marginRight: 12,
+  },
+
+  relatedImage: {
+    width: "100%",
+    height: 90,
+    borderRadius: 10,
+  },
+
+  relatedName: {
+    fontSize: 13,
+    marginTop: 4,
+  },
+
+  relatedPrice: {
+    color: "#0ea91d",
+    fontWeight: "700",
   },
 });

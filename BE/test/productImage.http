@@ -8,7 +8,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJyb
   "is_main": true
 }
 ###
-GET http://127.0.0.1:5000/product-images/product/25
+GET http://127.0.0.1:5000/product-images/product/1
 ###
 GET http://127.0.0.1:5000/uploads/OIP2.jpg
 ###

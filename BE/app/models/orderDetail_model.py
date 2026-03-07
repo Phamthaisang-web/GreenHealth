@@ -7,7 +7,7 @@ class OrderDetailModel:
         self.db_config = DB_CONFIG
 
     def get_connection(self):
-        """Tạo kết nối mới tới database"""
+        
         return mysql.connector.connect(**self.db_config)
 
     # ---------------------------------------------------------

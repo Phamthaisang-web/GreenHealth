@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 14,
-    color: "#1976D2",
+    color: "#0ea91d",
     fontWeight: "bold",
   },
   origin: {

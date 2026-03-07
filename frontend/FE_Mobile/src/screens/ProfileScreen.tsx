@@ -16,6 +16,7 @@ import { useNavigation, useIsFocused } from "@react-navigation/native";
 export default function ProfileScreen() {
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
+
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -28,11 +29,13 @@ export default function ProfileScreen() {
 
   const checkLoginStatus = async () => {
     const token = await AsyncStorage.getItem("token");
+
     if (!token) {
       setIsLoggedIn(false);
       setLoading(false);
       return;
     }
+
     setIsLoggedIn(true);
     loadProfile();
   };
@@ -74,35 +77,63 @@ export default function ProfileScreen() {
         contentContainerStyle={{ flexGrow: 1 }}
       >
         {isLoggedIn ? (
-          /* --- TRƯỜNG HỢP ĐÃ ĐĂNG NHẬP --- */
           <View style={styles.content}>
+            {/* PROFILE HEADER */}
             <View style={styles.headerProfile}>
               <View style={styles.avatarMini}>
                 <Text style={styles.avatarText}>
-                  {user?.name?.charAt(0).toUpperCase()}
+                  {user?.name?.charAt(0)?.toUpperCase()}
                 </Text>
               </View>
+
               <Text style={styles.name}>{user?.name}</Text>
               <Text style={styles.email}>{user?.email}</Text>
             </View>
 
+            {/* USER INFO */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Tài khoản</Text>
-              <MenuRow label="Chỉnh sửa hồ sơ" onPress={() => {}} />
-              <MenuRow label="Địa chỉ nhận hàng" onPress={() => {}} />
+              <Text style={styles.sectionTitle}>Thông tin cá nhân</Text>
+
+              <InfoRow label="Tên" value={user?.name} />
+              <InfoRow label="Email" value={user?.email} />
+              <InfoRow label="Số điện thoại" value={user?.phone} />
+              <InfoRow label="Điểm thưởng" value={user?.reward_points} />
+              <InfoRow label="Vai trò" value={user?.role} />
+              <InfoRow label="Trạng thái" value={user?.status} />
             </View>
 
+            {/* ACCOUNT MENU */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Tài khoản</Text>
+
+              <MenuRow
+                label="Chỉnh sửa hồ sơ"
+                onPress={() => navigation.navigate("EditProfile")}
+              />
+
+              <MenuRow
+                label="Địa chỉ nhận hàng"
+                onPress={() => navigation.navigate("AddressList")}
+              />
+
+              <MenuRow
+                label="Đơn hàng của tôi"
+                onPress={() => navigation.navigate("OrderHistory")}
+              />
+            </View>
+
+            {/* FOOTER */}
             <View style={styles.footer}>
-              <TouchableOpacity onPress={() => navigation.navigate("Main")}>
+              <TouchableOpacity onPress={() => navigation.navigate("Home")}>
                 <Text style={styles.homeLinkText}>Về trang chủ</Text>
               </TouchableOpacity>
+
               <TouchableOpacity style={styles.logoutBtn} onPress={logout}>
                 <Text style={styles.logoutText}>Đăng xuất</Text>
               </TouchableOpacity>
             </View>
           </View>
         ) : (
-          /* --- TRƯỜNG HỢP CHƯA ĐĂNG NHẬP --- */
           <View style={styles.unauthorizedContainer}>
             <View style={styles.header}>
               <Text style={styles.title}>Tài khoản</Text>
@@ -111,7 +142,6 @@ export default function ProfileScreen() {
               </Text>
             </View>
 
-            {/* Nút bấm để chuyển qua trang Login */}
             <TouchableOpacity
               style={styles.loginButton}
               onPress={() => navigation.navigate("Login")}
@@ -121,7 +151,7 @@ export default function ProfileScreen() {
 
             <TouchableOpacity
               style={styles.homeLink}
-              onPress={() => navigation.navigate("Main")}
+              onPress={() => navigation.navigate("")}
             >
               <Text style={styles.homeLinkText}>Khám phá thêm</Text>
             </TouchableOpacity>
@@ -132,6 +162,13 @@ export default function ProfileScreen() {
   );
 }
 
+const InfoRow = ({ label, value }: any) => (
+  <View style={styles.infoRow}>
+    <Text style={styles.infoLabel}>{label}</Text>
+    <Text style={styles.infoValue}>{value}</Text>
+  </View>
+);
+
 const MenuRow = ({ label, onPress }: any) => (
   <TouchableOpacity style={styles.row} onPress={onPress}>
     <Text style={styles.rowLabel}>{label}</Text>
@@ -141,27 +178,30 @@ const MenuRow = ({ label, onPress }: any) => (
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },
+
   content: { flex: 1 },
 
-  // Giao diện khi chưa đăng nhập
   unauthorizedContainer: {
     flex: 1,
     justifyContent: "center",
     paddingHorizontal: 40,
   },
+
   header: { marginBottom: 30 },
+
   title: {
     fontSize: 26,
     fontWeight: "700",
     color: "#000",
-    letterSpacing: -0.5,
     marginBottom: 8,
   },
+
   subtitle: {
     fontSize: 14,
     color: "#999",
     lineHeight: 20,
   },
+
   loginButton: {
     backgroundColor: "#000",
     height: 48,
@@ -170,17 +210,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 15,
   },
+
   loginButtonText: {
     color: "#fff",
     fontSize: 15,
     fontWeight: "600",
   },
 
-  // Giao diện Profile khi đã đăng nhập
   headerProfile: {
     alignItems: "center",
     paddingVertical: 40,
   },
+
   avatarMini: {
     width: 70,
     height: 70,
@@ -190,11 +231,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 12,
   },
-  avatarText: { color: "#000", fontSize: 24, fontWeight: "300" },
-  name: { fontSize: 20, fontWeight: "700", color: "#000" },
-  email: { fontSize: 13, color: "#AAA" },
 
-  section: { paddingHorizontal: 30 },
+  avatarText: {
+    color: "#000",
+    fontSize: 24,
+    fontWeight: "600",
+  },
+
+  name: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#000",
+  },
+
+  email: {
+    fontSize: 13,
+    color: "#AAA",
+  },
+
+  section: {
+    paddingHorizontal: 30,
+    marginBottom: 20,
+  },
+
   sectionTitle: {
     fontSize: 12,
     fontWeight: "700",
@@ -202,6 +261,26 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     marginBottom: 10,
   },
+
+  infoRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#F5F5F5",
+  },
+
+  infoLabel: {
+    fontSize: 14,
+    color: "#888",
+  },
+
+  infoValue: {
+    fontSize: 14,
+    color: "#000",
+    fontWeight: "500",
+  },
+
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -209,22 +288,36 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#F9F9F9",
   },
-  rowLabel: { fontSize: 15, color: "#333" },
-  arrow: { fontSize: 18, color: "#DDD" },
+
+  rowLabel: {
+    fontSize: 15,
+    color: "#333",
+  },
+
+  arrow: {
+    fontSize: 18,
+    color: "#DDD",
+  },
 
   footer: {
     paddingHorizontal: 40,
-    marginTop: 40,
+    marginTop: 30,
     alignItems: "center",
     paddingBottom: 40,
   },
-  homeLink: { marginTop: 10, alignItems: "center" },
+
+  homeLink: {
+    marginTop: 10,
+    alignItems: "center",
+  },
+
   homeLinkText: {
     fontSize: 14,
     color: "#000",
     textDecorationLine: "underline",
     fontWeight: "500",
   },
+
   logoutBtn: {
     marginTop: 20,
     width: "100%",
@@ -235,5 +328,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  logoutText: { color: "#FF3B30", fontWeight: "600" },
+
+  logoutText: {
+    color: "#FF3B30",
+    fontWeight: "600",
+  },
 });

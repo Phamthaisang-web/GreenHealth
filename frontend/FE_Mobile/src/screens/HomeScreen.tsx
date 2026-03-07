@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import ProductCard from "../components/ProductCard";
 import { useNavigation } from "@react-navigation/native";
+
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
 
 const ITEM_MIN_WIDTH = 180;
@@ -18,31 +19,38 @@ const GAP = 12;
 
 export default function HomeScreen() {
   const [products, setProducts] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
 
   const { width } = useWindowDimensions();
   const navigation = useNavigation<any>();
+
   const numColumns = Math.min(
     6,
     Math.max(2, Math.floor((width - 32 + GAP) / (ITEM_MIN_WIDTH + GAP))),
   );
-  const [refreshing, setRefreshing] = useState(false);
 
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await fetchProducts();
-    setRefreshing(false);
-  };
   useEffect(() => {
     if (!BASE_URL) {
       console.error("❌ EXPO_PUBLIC_BASE_URL is missing");
       setLoading(false);
       return;
     }
+
     fetchProducts();
+    fetchCategories();
   }, []);
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchProducts();
+    await fetchCategories();
+    setRefreshing(false);
+  };
+
+  // lấy sản phẩm
   const fetchProducts = async (name = "") => {
     try {
       setLoading(true);
@@ -60,6 +68,7 @@ export default function HomeScreen() {
             const imgRes = await fetch(
               `${BASE_URL}/product-images/product/${product.id}`,
             );
+
             const images = await imgRes.json();
 
             const mainImage =
@@ -83,13 +92,27 @@ export default function HomeScreen() {
     }
   };
 
+  // =============================
+  // FETCH CATEGORIES
+  // =============================
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch(`${BASE_URL}/categories`);
+      const data = await res.json();
+
+      setCategories(data);
+    } catch (error) {
+      console.log("❌ Lỗi lấy category:", error);
+    }
+  };
+
   if (loading) {
     return <ActivityIndicator size="large" style={{ marginTop: 40 }} />;
   }
 
   return (
     <View style={styles.container}>
-      {/* 🔍 Search */}
+      {/* 🔍 SEARCH */}
       <View style={styles.searchContainer}>
         <TextInput
           placeholder="Tìm sản phẩm..."
@@ -117,45 +140,29 @@ export default function HomeScreen() {
           <Text style={styles.searchText}>Tìm</Text>
         </TouchableOpacity>
       </View>
-      {/* 🥬 Categories */}
-      <View style={styles.categoryContainer}>
-        <TouchableOpacity
-          style={styles.categoryButton}
-          onPress={() =>
-            navigation.navigate("Products", {
-              category_name: "Rau",
-              title: "Rau củ",
-            })
-          }
-        >
-          <Text style={styles.categoryText}>🥬 Rau củ</Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.categoryButton}
-          onPress={() =>
-            navigation.navigate("Products", {
-              category_name: "Trái",
-              title: "Trái cây",
-            })
-          }
-        >
-          <Text style={styles.categoryText}>🍎 Trái cây</Text>
-        </TouchableOpacity>
+      <FlatList
+        data={categories}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item) => item.id.toString()}
+        style={{ marginBottom: 12, maxHeight: 45 }}
+        contentContainerStyle={{ alignItems: "center" }}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.categoryButton}
+            onPress={() =>
+              navigation.navigate("Products", {
+                category_name: item.name,
+                title: item.name,
+              })
+            }
+          >
+            <Text style={styles.categoryText}>{item.name}</Text>
+          </TouchableOpacity>
+        )}
+      />
 
-        <TouchableOpacity
-          style={styles.categoryButton}
-          onPress={() =>
-            navigation.navigate("Products", {
-              category_name: "Thịt",
-              title: "Thịt tươi",
-            })
-          }
-        >
-          <Text style={styles.categoryText}>🥩 Thịt tươi</Text>
-        </TouchableOpacity>
-      </View>
-      {/* 🧱 Grid */}
       <FlatList
         key={numColumns}
         data={products}
@@ -185,11 +192,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingHorizontal: 16,
   },
+
   searchContainer: {
     flexDirection: "row",
     gap: 8,
     marginVertical: 12,
   },
+
   searchInput: {
     flex: 1,
     borderWidth: 1,
@@ -198,6 +207,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     height: 40,
   },
+
   searchButton: {
     backgroundColor: "#1976D2",
     paddingHorizontal: 16,
@@ -205,23 +215,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+
   searchText: {
     color: "#fff",
     fontWeight: "600",
   },
-  categoryContainer: {
-    flexDirection: "row",
-    gap: 8,
-    marginBottom: 12,
-  },
 
   categoryButton: {
-    flex: 1,
     borderWidth: 1,
     borderColor: "#1976D2",
     borderRadius: 20,
     paddingVertical: 8,
-    alignItems: "center",
+    paddingHorizontal: 16,
+    marginRight: 8,
   },
 
   categoryText: {

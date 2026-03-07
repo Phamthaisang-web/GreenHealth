@@ -27,7 +27,6 @@ GET http://127.0.0.1:5000/products
 GET http://127.0.0.1:5000/products/
 ### lấy sản phẩm theeo category_id(mục lục)
 GET http://127.0.0.1:5000/products/2
-
 ###
 DELETE  http://127.0.0.1:5000/products/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzI3MjQyMDB9.wmhrcPoI6ZYump0zZRtR6ExN2Y4qM71miWdrUMyiYXI

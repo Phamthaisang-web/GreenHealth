@@ -5,49 +5,36 @@ from app.utils.auth_middleware import token_required
 order_bp = Blueprint("order", __name__, url_prefix="/orders")
 
 
-# ---------------------------
-# USER: Đặt hàng
-# ---------------------------
+# ddatw hang
 @order_bp.route("/", methods=["POST"])
 @token_required
 def place_order():
     return order_controller.place_order()
 
 
-# ---------------------------
-# USER: Xem lịch sử đơn hàng của mình
-# ---------------------------
+# lịch sử đon hangdf của mình
 @order_bp.route("/my-orders", methods=["GET"])
 @token_required
 def get_my_orders():
-    user_id = request.user.get("id")
+    user_id = request.user.get("user_id")
     return order_controller.get_order_history(user_id)
 
 
-# ---------------------------
-# USER: Xem chi tiết 1 đơn hàng của mình
-# ---------------------------
+# xem chi tiết đơn hàng
 @order_bp.route("/<int:order_id>", methods=["GET"])
 @token_required
 def get_order_detail(order_id):
-    """
-    Có thể check order thuộc user trong controller/service
-    """
-    return order_controller.get_order_detail(order_id, request.user)
+    
+    return order_controller.get_order_detail(order_id)
 
-
-# ---------------------------
-# USER: Hủy đơn hàng
-# ---------------------------
+# hủy đơn
 @order_bp.route("/<int:order_id>/cancel", methods=["PUT"])
 @token_required
 def cancel_order(order_id):
     return order_controller.cancel_order(order_id, request.user)
 
 
-# ---------------------------
-# ADMIN: Xem tất cả đơn hàng
-# ---------------------------
+# admin lấy tất cả đơn
 @order_bp.route("/", methods=["GET"])
 @token_required
 def get_all_orders():
@@ -55,9 +42,7 @@ def get_all_orders():
         return jsonify({"message": "Chỉ Admin mới có quyền truy cập"}), 403
 
     return order_controller.get_all_orders()
-# ---------------------------
-# ADMIN: Cập nhật trạng thái đơn hàng
-# ---------------------------
+# admin cập nhập trangh thái
 @order_bp.route("/status/<int:order_id>", methods=["PUT"])
 @token_required
 def update_order_status(order_id):

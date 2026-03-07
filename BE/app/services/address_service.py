@@ -46,10 +46,7 @@ class AddressService:
             raise ValueError("Thiếu user_id")
 
         return self.address_model.get_addresses_by_user(user_id)
-
-    # ---------------------------
     # Lấy chi tiết địa chỉ
-    # ---------------------------
     def get_address_details(self, address_id):
         if not address_id:
             raise ValueError("Thiếu address_id")

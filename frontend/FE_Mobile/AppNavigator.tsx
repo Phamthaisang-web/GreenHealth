@@ -15,6 +15,8 @@ import ChangePasswordScreen from "./src/screens/ChangePasswordScreen";
 import AddAddressScreen from "./src/screens/AddAddressScreen";
 import AddressListScreen from "./src/screens/AddressListScreen";
 import EditProfileScreen from "./src/screens/EditProfileScreen";
+import PaymentScreen from "./src/screens/PaymentScreen";
+import OrderDetailScreen from "./src/screens/OrdersDetailScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -54,6 +56,16 @@ export default function AppNavigator() {
             name="EditProfile"
             component={EditProfileScreen}
             options={{ title: "Địa chỉ của tôi" }}
+          />
+          <Stack.Screen
+            name="Payment"
+            component={PaymentScreen}
+            options={{ title: "Trang thanh toán" }}
+          />
+          <Stack.Screen
+            name="OrderDetail"
+            component={OrderDetailScreen}
+            options={{ title: "Trang chi tiết sản phẩm" }}
           />
         </Stack.Navigator>
       </NavigationContainer>

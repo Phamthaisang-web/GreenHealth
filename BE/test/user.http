@@ -37,9 +37,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb
   "new_password": "123456"
 }
 ###
-GET http://127.0.0.1:5000/users/
+GET http://127.0.0.1:5000/users/me
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzI4MTY1NzZ9.S5f4D_JUSMROwF_-dI2IrMjN7L0BRYhQ9KP5EADvCNU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzI5NTYyMDR9.8kSFUHqsLv1XdQAhCv7tnRDBdFoTq32SgWJMF2kdWGA
 ###
 PUT http://127.0.0.1:5000/users
 Content-Type: application/json

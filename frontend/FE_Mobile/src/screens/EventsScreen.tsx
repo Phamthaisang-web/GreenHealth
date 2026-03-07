@@ -79,16 +79,16 @@ export default function EventsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff", // Trả về nền trắng sạch sẽ
+    backgroundColor: "#fff",
   },
   card: {
     backgroundColor: "#fff",
-    marginBottom: 30, // Khoảng cách giữa các tin rộng hơn để dễ thở
+    marginBottom: 30,
   },
   image: {
     width: "100%",
     height: 180,
-    borderRadius: 12, // Bo góc vừa phải
+    borderRadius: 12,
     backgroundColor: "#F5F5F7",
   },
   content: {
