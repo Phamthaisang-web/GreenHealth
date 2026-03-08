@@ -285,7 +285,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 24,
     padding: 16,
   },
-
   name: {
     fontSize: 22,
     fontWeight: "700",

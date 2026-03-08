@@ -39,8 +39,10 @@ def place_order():
 def get_order_history(user_id):
     if not user_id:
         return jsonify({"message": "Thiếu user_id"}), 400
+    status = request.args.get("status")
 
-    orders = order_service.get_order_history(user_id)
+    orders = order_service.get_order_history(user_id, status)
+    
     return jsonify(orders), 200
 
 

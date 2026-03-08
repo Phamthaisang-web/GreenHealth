@@ -25,7 +25,6 @@ export default function SuppliersPage() {
   );
   const [form] = Form.useForm();
 
-  // ================= GET =================
   const { data: suppliers = [], isLoading } = useQuery<Supplier[]>({
     queryKey: ["suppliers"],
     queryFn: async () => {

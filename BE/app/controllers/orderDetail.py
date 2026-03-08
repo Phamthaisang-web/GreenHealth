@@ -27,7 +27,6 @@ def get_order_detail(detail_id):
 
 def create_order_detail():
     data = request.json
-
     try:
         detail_id = order_detail_service.create(data)
         return jsonify({

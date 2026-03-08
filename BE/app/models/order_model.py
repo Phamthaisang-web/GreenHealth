@@ -129,7 +129,10 @@ class OrderModel:
        # ==========================================
     # LẤY ĐƠN HÀNG CỦA USER
     # ==========================================
-    def get_user_orders(self, user_id):
+        # ==========================================
+    # LẤY ĐƠN HÀNG CỦA USER
+    # ==========================================
+    def get_user_orders(self, user_id, status=None):
 
         conn = self.get_connection()
         cursor = conn.cursor(dictionary=True)
@@ -169,11 +172,19 @@ class OrderModel:
             ON o.address_id = a.id
 
         WHERE o.user_id = %s
-
-        ORDER BY o.created_at DESC
         """
 
-        cursor.execute(sql, (user_id,))
+        params = [user_id]
+
+        # FILTER STATUS
+        if status:
+            sql += " AND o.status = %s"
+            params.append(status)
+
+        sql += " ORDER BY o.created_at DESC"
+
+        cursor.execute(sql, params)
+
         orders = cursor.fetchall()
 
         cursor.close()
@@ -250,9 +261,9 @@ class OrderModel:
             cursor.close()
             conn.close()
 
-    # ==========================================
+ 
     # UPDATE STATUS
-    # ==========================================
+
     def update_status(self, order_id, new_status):
 
         conn = self.get_connection()

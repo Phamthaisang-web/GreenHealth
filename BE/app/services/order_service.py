@@ -63,8 +63,8 @@ class OrderService:
     # =========================
     # Lấy lịch sử đơn hàng user
     # =========================
-    def get_order_history(self, user_id):
-        return self.order_model.get_user_orders(user_id)
+    def get_order_history(self, user_id,status=None):
+        return self.order_model.get_user_orders(user_id, status)
 
 
     

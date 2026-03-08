@@ -115,11 +115,6 @@ export default function ProfileScreen() {
                 label="Địa chỉ nhận hàng"
                 onPress={() => navigation.navigate("AddressList")}
               />
-
-              <MenuRow
-                label="Đơn hàng của tôi"
-                onPress={() => navigation.navigate("OrderHistory")}
-              />
             </View>
 
             {/* FOOTER */}

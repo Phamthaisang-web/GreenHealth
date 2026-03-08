@@ -9,6 +9,7 @@ import {
   ShoppingCartOutlined,
   FileTextOutlined,
   TagOutlined,
+  MessageOutlined,
 } from "@ant-design/icons";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import HeaderLayout from "./HeaderLayout";
@@ -54,6 +55,12 @@ export default function MainLayout() {
       key: "/vouchers",
       icon: <TagOutlined />,
       label: "Mã giảm giá",
+    },
+
+    {
+      key: "/chat",
+      icon: <MessageOutlined />,
+      label: "Chat",
     },
   ];
 

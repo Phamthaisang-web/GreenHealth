@@ -9,6 +9,7 @@ import {
   Alert,
   RefreshControl,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -18,6 +19,14 @@ export default function OrderScreen({ navigation }: any) {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [filter, setFilter] = useState("ALL");
+
+  const filters = [
+    { key: "ALL", label: "Tất cả" },
+    { key: "PENDING", label: "Chờ xử lý" },
+    { key: "COMPLETED", label: "Hoàn thành" },
+    { key: "CANCELLED", label: "Đã hủy" },
+  ];
 
   useEffect(() => {
     fetchOrders();
@@ -26,11 +35,16 @@ export default function OrderScreen({ navigation }: any) {
   const fetchOrders = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
+
       const res = await fetch(`${BASE_URL}/orders/my-orders`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+
       const data = await res.json();
-      setOrders(data);
+
+      setOrders(data || []);
     } catch (err) {
       console.log("❌ Error:", err);
     } finally {
@@ -42,12 +56,18 @@ export default function OrderScreen({ navigation }: any) {
   const cancelOrder = async (orderId: number) => {
     try {
       const token = await AsyncStorage.getItem("token");
+
       const res = await fetch(`${BASE_URL}/orders/${orderId}/cancel`, {
         method: "PUT",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+
       if (!res.ok) throw new Error();
+
       Alert.alert("Thành công", "Đã hủy đơn hàng");
+
       fetchOrders();
     } catch (error) {
       Alert.alert("Lỗi", "Không thể hủy đơn");
@@ -67,8 +87,14 @@ export default function OrderScreen({ navigation }: any) {
     }
   };
 
+  const filteredOrders =
+    filter === "ALL"
+      ? orders
+      : orders.filter((order) => order.status === filter);
+
   const renderItem = ({ item }: { item: any }) => {
     const status = getStatusInfo(item.status);
+
     return (
       <Pressable
         style={styles.card}
@@ -78,6 +104,7 @@ export default function OrderScreen({ navigation }: any) {
           <Text style={styles.date}>
             {new Date(item.created_at).toLocaleDateString("vi-VN")}
           </Text>
+
           <View style={[styles.statusBadge, { backgroundColor: status.bg }]}>
             <Text style={[styles.statusText, { color: status.color }]}>
               {status.label}
@@ -86,6 +113,7 @@ export default function OrderScreen({ navigation }: any) {
         </View>
 
         <Text style={styles.orderCode}>#{item.order_code}</Text>
+
         <Text style={styles.address} numberOfLines={1}>
           {item.full_address}
         </Text>
@@ -103,8 +131,8 @@ export default function OrderScreen({ navigation }: any) {
                   { text: "Quay lại" },
                   {
                     text: "Hủy đơn",
-                    onPress: () => cancelOrder(item.id),
                     style: "destructive",
+                    onPress: () => cancelOrder(item.id),
                   },
                 ])
               }
@@ -123,11 +151,39 @@ export default function OrderScreen({ navigation }: any) {
         <Text style={styles.headerTitle}>Đơn hàng của tôi</Text>
       </View>
 
+      {/* Filter */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.filterContainer}
+        style={{ maxHeight: 40 }}
+      >
+        {filters.map((item) => (
+          <Pressable
+            key={item.key}
+            style={[
+              styles.filterBtn,
+              filter === item.key && styles.filterActive,
+            ]}
+            onPress={() => setFilter(item.key)}
+          >
+            <Text
+              style={[
+                styles.filterText,
+                filter === item.key && styles.filterTextActive,
+              ]}
+            >
+              {item.label}
+            </Text>
+          </Pressable>
+        ))}
+      </ScrollView>
+
       {loading ? (
         <ActivityIndicator color="#000" style={{ marginTop: 20 }} />
       ) : (
         <FlatList
-          data={orders}
+          data={filteredOrders}
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderItem}
           contentContainerStyle={styles.list}
@@ -151,33 +207,79 @@ export default function OrderScreen({ navigation }: any) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#FFFFFF" },
-  header: { paddingHorizontal: 20, paddingVertical: 15 },
+
+  header: {
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+  },
+
   headerTitle: {
     fontSize: 18,
     fontWeight: "800",
     color: "#1A1A1A",
-    letterSpacing: -0.5,
   },
 
-  list: { paddingHorizontal: 20, paddingTop: 10 },
+  filterContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    gap: 8,
+  },
+  filterBtn: {
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+    borderRadius: 20,
+    backgroundColor: "#F2F2F2",
+    marginRight: 8,
+  },
+
+  filterActive: {
+    backgroundColor: "#0ea91d",
+  },
+
+  filterText: {
+    fontSize: 13,
+    color: "#828282",
+    fontWeight: "600",
+  },
+
+  filterTextActive: {
+    color: "#FFFFFF",
+  },
+
+  list: {
+    paddingHorizontal: 20,
+  },
+
   card: {
     paddingVertical: 20,
     borderBottomWidth: 1,
     borderBottomColor: "#F2F2F2",
   },
+
   cardHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 8,
   },
-  date: { fontSize: 13, color: "#828282" },
+
+  date: {
+    fontSize: 13,
+    color: "#828282",
+  },
+
   statusBadge: {
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,
   },
-  statusText: { fontSize: 11, fontWeight: "700", textTransform: "uppercase" },
+
+  statusText: {
+    fontSize: 11,
+    fontWeight: "700",
+    textTransform: "uppercase",
+  },
 
   orderCode: {
     fontSize: 14,
@@ -185,14 +287,25 @@ const styles = StyleSheet.create({
     color: "#1A1A1A",
     marginBottom: 4,
   },
-  address: { fontSize: 13, color: "#828282", marginBottom: 12 },
+
+  address: {
+    fontSize: 13,
+    color: "#828282",
+    marginBottom: 12,
+  },
 
   cardFooter: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "baseline",
   },
-  price: { fontSize: 13, fontWeight: "800", color: "#0ea91d" },
+
+  price: {
+    fontSize: 13,
+    fontWeight: "800",
+    color: "#0ea91d",
+  },
+
   cancelLink: {
     fontSize: 13,
     color: "#EB5757",

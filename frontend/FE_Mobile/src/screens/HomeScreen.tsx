@@ -12,6 +12,7 @@ import {
 import ProductCard from "../components/ProductCard";
 import { useNavigation } from "@react-navigation/native";
 import AIChatWidget from "../components/AIChatWidget";
+import ChatWidget from "./ChatWidget";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
 
@@ -183,7 +184,7 @@ export default function HomeScreen() {
         renderItem={({ item }) => <ProductCard product={item} />}
         showsVerticalScrollIndicator={false}
       />
-      <AIChatWidget />
+      <ChatWidget />
     </View>
   );
 }

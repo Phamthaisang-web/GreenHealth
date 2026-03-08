@@ -1,9 +1,20 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../services/api";
-import { Table, Tag, Modal, Button, Select, message, Input } from "antd";
+import {
+  Table,
+  Tag,
+  Modal,
+  Button,
+  Select,
+  message,
+  Input,
+  DatePicker,
+} from "antd";
 import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
+
+const { RangePicker } = DatePicker;
 
 interface Order {
   id: number;
@@ -43,22 +54,39 @@ export default function OrdersPage() {
   const [filters, setFilters] = useState({
     status: "",
     order_code: "",
+    date_from: "",
+    date_to: "",
   });
+
+  // =========================
+  // GET ORDERS
+  // =========================
 
   const { data: orders = [], isLoading } = useQuery<Order[]>({
     queryKey: ["orders", filters],
     queryFn: async () => {
-      const res = await api.get("/orders/", {
-        params: filters,
-      });
+      const params = Object.fromEntries(
+        Object.entries(filters).filter(([_, v]) => v !== ""),
+      );
+
+      const res = await api.get("/orders/", { params });
+
       return res.data;
     },
   });
+
+  // =========================
+  // GET ORDER DETAIL
+  // =========================
 
   const getOrderDetail = async (id: number) => {
     const res = await api.get(`/orders/${id}`);
     return res.data;
   };
+
+  // =========================
+  // UPDATE STATUS
+  // =========================
 
   const updateStatus = useMutation({
     mutationFn: ({ id, status }: any) =>
@@ -74,6 +102,10 @@ export default function OrdersPage() {
     },
   });
 
+  // =========================
+  // STATUS COLOR
+  // =========================
+
   const renderStatus = (status: string) => {
     const colors: any = {
       PENDING: "orange",
@@ -84,6 +116,10 @@ export default function OrdersPage() {
 
     return <Tag color={colors[status]}>{status}</Tag>;
   };
+
+  // =========================
+  // TABLE COLUMNS
+  // =========================
 
   const columns: ColumnsType<Order> = [
     {
@@ -139,7 +175,7 @@ export default function OrdersPage() {
           </Button>
 
           <Select
-            style={{ width: 130 }}
+            style={{ width: 140 }}
             defaultValue={record.status}
             onChange={(value) =>
               updateStatus.mutate({
@@ -158,6 +194,10 @@ export default function OrdersPage() {
       ),
     },
   ];
+
+  // =========================
+  // ORDER ITEM COLUMNS
+  // =========================
 
   const itemColumns: ColumnsType<OrderItem> = [
     {
@@ -183,6 +223,8 @@ export default function OrdersPage() {
   return (
     <div>
       <h2>Danh sách đơn hàng</h2>
+
+      {/* FILTER */}
 
       <div style={{ marginBottom: 20, display: "flex", gap: 10 }}>
         <Input
@@ -216,11 +258,32 @@ export default function OrdersPage() {
           ]}
         />
 
+        <RangePicker
+          onChange={(dates) => {
+            if (!dates || !dates[0] || !dates[1]) {
+              setFilters({
+                ...filters,
+                date_from: "",
+                date_to: "",
+              });
+              return;
+            }
+
+            setFilters({
+              ...filters,
+              date_from: dates[0].format("YYYY-MM-DD"),
+              date_to: dates[1].format("YYYY-MM-DD"),
+            });
+          }}
+        />
+
         <Button
           onClick={() =>
             setFilters({
               status: "",
               order_code: "",
+              date_from: "",
+              date_to: "",
             })
           }
         >
@@ -228,12 +291,16 @@ export default function OrdersPage() {
         </Button>
       </div>
 
+      {/* TABLE */}
+
       <Table
         columns={columns}
         dataSource={orders}
         rowKey="id"
         loading={isLoading}
       />
+
+      {/* MODAL DETAIL */}
 
       <Modal
         title="Chi tiết đơn hàng"

@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   FlatList,
   StyleSheet,
+  Animated,
+  PanResponder,
 } from "react-native";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
@@ -18,6 +20,21 @@ export default function AIChatWidget() {
   const [loading, setLoading] = useState(false);
 
   const flatListRef = useRef<FlatList>(null);
+
+  // vị trí nút
+  const pan = useRef(new Animated.ValueXY({ x: 20, y: 80 })).current;
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+
+      onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }], {
+        useNativeDriver: false,
+      }),
+
+      onPanResponderRelease: () => {},
+    }),
+  ).current;
 
   const sendMessage = async () => {
     if (!message.trim()) return;
@@ -85,7 +102,6 @@ export default function AIChatWidget() {
             </TouchableOpacity>
           </View>
 
-          {/* Messages */}
           <FlatList
             ref={flatListRef}
             data={messages}
@@ -99,7 +115,6 @@ export default function AIChatWidget() {
 
           {loading && <Text style={styles.loading}>AI đang trả lời...</Text>}
 
-          {/* Input */}
           <View style={styles.inputContainer}>
             <TextInput
               placeholder="Hỏi AI..."
@@ -115,15 +130,20 @@ export default function AIChatWidget() {
         </View>
       )}
 
-      {/* Floating Button */}
-      <TouchableOpacity
-        style={styles.chatButton}
-        onPress={() => setOpen(!open)}
+      {/* DRAG BUTTON */}
+      <Animated.View
+        style={[
+          styles.chatButton,
+          {
+            transform: [{ translateX: pan.x }, { translateY: pan.y }],
+          },
+        ]}
+        {...panResponder.panHandlers}
       >
-        <Text style={styles.chatText}>
+        <TouchableOpacity onPress={() => setOpen(!open)}>
           <MaterialIcons name="chat" size={26} color="#fff" />
-        </Text>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </Animated.View>
     </>
   );
 }
@@ -131,8 +151,8 @@ export default function AIChatWidget() {
 const styles = StyleSheet.create({
   chatButton: {
     position: "absolute",
-    bottom: 80,
-    right: 20,
+    bottom: 0,
+    right: 0,
     width: 55,
     height: 55,
     borderRadius: 30,
@@ -140,11 +160,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     elevation: 5,
-  },
-
-  chatText: {
-    color: "#fff",
-    fontWeight: "bold",
   },
 
   chatContainer: {

@@ -13,6 +13,7 @@ import UserPage from "./pages/UserPage";
 import OrderPage from "./pages/OrderPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Vouchers from "./pages/Vouchers";
+import AdminChatPage from "./pages/AdminChatPage";
 const queryClient = new QueryClient();
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
             <Route path="suppliers" element={<SuppliersPage />} />
             <Route path="orders" element={<OrderPage />} />
             <Route path="vouchers" element={<Vouchers />} />
+            <Route path="chat" element={<AdminChatPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
